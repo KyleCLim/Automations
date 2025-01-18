@@ -1,0 +1,788 @@
+{
+  "id": "dc32f86c-188f-4ffa-bf1b-05779f08f0aa",
+  "version": "2.0",
+  "name": "SHEIN - Capstone Project",
+  "url": "https://ph.shein.com/user/auth/login?from=navTop",
+  "tests": [{
+    "id": "e12ce0b9-ea28-466f-b027-a5b823a5e198",
+    "name": "IM02: Shein_CartItemCountDisplay_Feature_Positive_02",
+    "commands": [{
+      "id": "de561564-7322-4502-bbb8-03de545c35c8",
+      "comment": "",
+      "command": "open",
+      "target": "https://ph.shein.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "610b9c9d-2dd5-484a-9c87-8e425ff99d77",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "930x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2be90dd0-e1f7-4f3a-a3e1-a578bfb102cb",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,700)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c0c08820-1883-4d39-8ce2-c7d2daf76a1a",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,818.1818237304688)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "4ff9adb3-18f7-44f4-b71f-e5dea493f429",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,1118.1817626953125)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "d81b44f4-e92c-4ea4-90a1-4f3dcb7aa714",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,1500)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9a51bc9b-5e73-465b-a990-0dc4e01c66cf",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.bottom-static:nth-child(11) .base-img__initial",
+      "targets": [
+        ["css=.bottom-static:nth-child(11) .base-img__initial", "css:finder"],
+        ["xpath=//div[11]/div/div/a/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "477878c6-70f3-44d9-b479-663a7be92935",
+      "comment": "",
+      "command": "click",
+      "target": "css=.image-fade-in .crop-image-container__mask",
+      "targets": [
+        ["css=.image-fade-in .crop-image-container__mask", "css:finder"],
+        ["xpath=//div[12]/div[2]/section/div/a/div[2]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "3ece5228-7e3f-460c-8068-6d5cbf4ade43",
+      "comment": "",
+      "command": "click",
+      "target": "css=.j-product-intro__size-radio-spopover_87_index2 .product-intro__size-radio-inner",
+      "targets": [
+        ["css=.j-product-intro__size-radio-spopover_87_index2 .product-intro__size-radio-inner", "css:finder"],
+        ["xpath=//div[@id='goods-detail-v3']/div/div/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/span[2]/div/p", "xpath:idRelative"],
+        ["xpath=//span[2]/div/p", "xpath:position"],
+        ["xpath=//p[contains(.,'M')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "bf868f0f-c7d3-4bfa-99d1-b6ff988dbb21",
+      "comment": "",
+      "command": "click",
+      "target": "css=#ProductDetailAddBtn > .goodsDetail-btn-xl__container",
+      "targets": [
+        ["css=#ProductDetailAddBtn > .goodsDetail-btn-xl__container", "css:finder"],
+        ["xpath=//button[@id='ProductDetailAddBtn']/div", "xpath:idRelative"],
+        ["xpath=//button[2]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d9e57668-a53b-45eb-bd43-3b1a7b1ed19c",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.la-ball-pulse-white:nth-child(1)",
+      "targets": [
+        ["css=.la-ball-pulse-white:nth-child(1)", "css:finder"],
+        ["xpath=//button[@id='ProductDetailAddBtn']/div/div", "xpath:idRelative"],
+        ["xpath=//button[2]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a06e0649-fafc-464f-88a8-2200afaaf0f7",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=#ProductDetailAddBtn > .goodsDetail-btn-xl__container",
+      "targets": [
+        ["css=#ProductDetailAddBtn > .goodsDetail-btn-xl__container", "css:finder"],
+        ["xpath=//button[@id='ProductDetailAddBtn']/div", "xpath:idRelative"],
+        ["xpath=//button[2]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6b318363-9840-45b3-9aa3-e5a6f5461cf7",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=#ProductDetailAddBtn > .goodsDetail-btn-xl__container",
+      "targets": [
+        ["css=#ProductDetailAddBtn > .goodsDetail-btn-xl__container", "css:finder"],
+        ["xpath=//button[@id='ProductDetailAddBtn']/div", "xpath:idRelative"],
+        ["xpath=//button[2]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5c20db5f-da12-4ece-af75-4105adf21431",
+      "comment": "",
+      "command": "assertText",
+      "target": "xpath=//span[@class='cart-num']",
+      "targets": [],
+      "value": "3"
+    }]
+  }, {
+    "id": "890f0e65-12be-4e31-991b-e3a2094e0d43",
+    "name": "IM07: Shein_NoItemSizeSelected_Negative_01",
+    "commands": [{
+      "id": "bcf567cf-a221-45da-b6b1-149eda398ec7",
+      "comment": "",
+      "command": "open",
+      "target": "https://ph.shein.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "fe2af1f0-f97e-4839-9c14-68163d5e0b2f",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "924x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5213fe21-3ab1-4d33-8594-42182cc923e7",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,1.8181817531585693)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "45395c28-6440-4522-a203-d26d8812e29d",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,863.6363525390625)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "59a0669e-9a76-4575-bac6-613fe126eee9",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,1300)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6bf57768-8ebc-4888-9076-6461b9351f3f",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,1611.818115234375)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3e129a9e-2a1f-43ba-ba27-3edd3b2190ef",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,2100)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "59179402-40f1-4cac-9968-62cbbc74dff0",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.product-card:nth-child(19) .S-product-card__img-submain .crop-image-container__mask",
+      "targets": [
+        ["css=.product-card:nth-child(19) .S-product-card__img-submain .crop-image-container__mask", "css:finder"],
+        ["xpath=//section[19]/div/a/div[2]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6e54b759-026d-41f3-b2ce-f70d817e1ae1",
+      "comment": "",
+      "command": "click",
+      "target": "css=.image-fade-in .crop-image-container__mask",
+      "targets": [
+        ["css=.image-fade-in .crop-image-container__mask", "css:finder"],
+        ["xpath=//section[19]/div/a/div[2]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7754166e-6042-4159-b196-c54a84cd630d",
+      "comment": "",
+      "command": "click",
+      "target": "css=#ProductDetailAddBtn > .goodsDetail-btn-xl__container",
+      "targets": [
+        ["css=#ProductDetailAddBtn > .goodsDetail-btn-xl__container", "css:finder"],
+        ["xpath=//button[@id='ProductDetailAddBtn']/div", "xpath:idRelative"],
+        ["xpath=//button[2]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "aceee27f-2674-46fa-b079-1ce22a57f4ed",
+      "comment": "",
+      "command": "assertText",
+      "target": "xpath=//div[@class='product-intro__size-error-tips']",
+      "targets": [],
+      "value": "please choose Size"
+    }]
+  }, {
+    "id": "c0952c5d-c90b-40ab-9787-2e0da237c133",
+    "name": "SM03: Shein_Privacy&CookiePolicy_Positive_03",
+    "commands": [{
+      "id": "84d2e694-8e40-4f1f-85ef-0d523516943a",
+      "comment": "",
+      "command": "open",
+      "target": "https://ph.shein.com/user/auth/login?from=navTop",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f9d54feb-518d-4558-ac9f-aff678f82aa2",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "926x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f5dacd75-8cc0-4d10-9785-43e8aa5104c5",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Privacy & Cookie Policy",
+      "targets": [
+        ["linkText=Privacy & Cookie Policy", "linkText"],
+        ["css=.j-privacy-and-cookies", "css:finder"],
+        ["xpath=//a[contains(text(),'Privacy & Cookie Policy')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'javascript:void(0);')]", "xpath:href"],
+        ["xpath=//div[8]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Privacy & Cookie Policy')]", "xpath:innerText"]
+      ],
+      "value": "",
+      "opensWindow": true,
+      "windowHandleName": "win3196",
+      "windowTimeout": 2000
+    }, {
+      "id": "1df50604-0da9-4bd2-8f54-ccf1e7ae25d2",
+      "comment": "",
+      "command": "selectWindow",
+      "target": "handle=${win3196}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a09f24cd-7870-4cfb-a170-21ef0bd13bf4",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return document.URL;",
+      "targets": [],
+      "value": "theurl"
+    }, {
+      "id": "c700459d-a19f-4dbf-a786-744f980c9fd4",
+      "comment": "",
+      "command": "assert",
+      "target": "theurl",
+      "targets": [],
+      "value": "https://ph.shein.com/Privacy-Security-Policy-a-282.html"
+    }]
+  }, {
+    "id": "59faac49-6f20-46ef-b18a-8ecbdb05452d",
+    "name": "HM01: Shein_SignOut_Positive_01",
+    "commands": [{
+      "id": "a78e3afc-41df-4f1c-8cb1-978c25388cfd",
+      "comment": "",
+      "command": "open",
+      "target": "https://ph.shein.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ee3be0ea-296d-446d-a337-3d88f275f130",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "934x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "56ff086f-2d44-4477-a990-ee78bfa3e7d3",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.sh_pc_sui_icon_nav_me_24px_shein",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_me_24px_shein", "css:finder"],
+        ["xpath=//a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5dab8cb0-262f-428b-9b35-e58000378e85",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.sh_pc_sui_icon_nav_me_24px_shein",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_me_24px_shein", "css:finder"],
+        ["xpath=//a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c60f3807-c940-4b91-9da2-d7a97e576e8c",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.sh_pc_sui_icon_nav_cart_24px_shein",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_cart_24px_shein", "css:finder"],
+        ["xpath=//div[2]/a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "146ecc51-39c1-4a2c-b1f3-b2bf96c7c012",
+      "comment": "",
+      "command": "click",
+      "target": "css=.sh_pc_sui_icon_nav_me_24px_shein",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_me_24px_shein", "css:finder"],
+        ["xpath=//a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "cb71339c-fd0c-4ae8-b2b9-3cc388ac214e",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.sh_pc_sui_icon_nav_me_24px_shein",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_me_24px_shein", "css:finder"],
+        ["xpath=//a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4fd71846-418c-471b-81fc-5efacb0f039c",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.sh_pc_sui_icon_nav_me_24px_shein",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_me_24px_shein", "css:finder"],
+        ["xpath=//a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "9e605014-c619-4231-9433-1ac87ff12d31",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.j-header-username-icon",
+      "targets": [
+        ["css=.j-header-username-icon", "css:finder"],
+        ["xpath=//a[contains(@href, 'https://ph.shein.com/user/auth/login?direction=nav')]", "xpath:href"],
+        ["xpath=//div[3]/div/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "075a34ee-e155-4bc2-867c-becce9196988",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.j-header-username-icon",
+      "targets": [
+        ["css=.j-header-username-icon", "css:finder"],
+        ["xpath=//a[contains(@href, 'https://ph.shein.com/user/auth/login?direction=nav')]", "xpath:href"],
+        ["xpath=//div[3]/div/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7f6c018f-664b-4066-8cbc-2ae421abb93b",
+      "comment": "",
+      "command": "click",
+      "target": "css=a:nth-child(9) > .first-letter-upper",
+      "targets": [
+        ["css=a:nth-child(6) > .first-letter-upper", "css:finder"],
+        ["xpath=//a[6]/em", "xpath:position"],
+        ["xpath=//em[contains(.,'My Points')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "a93fe7d8-5063-4789-a8e3-d0a4d0fa8f92",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return document.URL;",
+      "targets": [],
+      "value": "theurl"
+    }, {
+      "id": "144b47ad-c49d-404d-90c9-851de41d46ed",
+      "comment": "",
+      "command": "assert",
+      "target": "theurl",
+      "targets": [],
+      "value": "https://ph.shein.com/user/auth/login?from=navTop"
+    }]
+  }, {
+    "id": "e4ef2998-4a57-460f-9df7-b8216843cb09",
+    "name": "UM01: Shein_CouponsLink_Positive_01",
+    "commands": [{
+      "id": "f80816b9-9184-4ba8-aa21-31bac4f409a4",
+      "comment": "",
+      "command": "open",
+      "target": "https://ph.shein.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "fc8596cb-dc44-409a-af83-bcfa53e9c1ea",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "938x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "68920434-6966-482a-80aa-b88e194323b6",
+      "comment": "",
+      "command": "click",
+      "target": "xpath=//a[@href='/user/index']",
+      "targets": [
+        ["css=.name", "css:finder"],
+        ["xpath=//a/div/div/span", "xpath:position"],
+        ["xpath=//span[contains(.,'kyleclarenzlim')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "e5ce46d0-ee06-4182-a95f-fd9c9fa2a7dc",
+      "comment": "",
+      "command": "click",
+      "target": "css=.tabs > .tab-item:nth-child(1) > .fsp-element",
+      "targets": [
+        ["css=.tabs > .tab-item:nth-child(1) > .fsp-element", "css:finder"],
+        ["xpath=//li/span[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4774e2ea-77dd-469b-9c5c-d422110c2df9",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return document.URL;",
+      "targets": [],
+      "value": "theurl"
+    }, {
+      "id": "461f4590-8c6c-44ad-899f-d5578c479a04",
+      "comment": "",
+      "command": "assert",
+      "target": "theurl",
+      "targets": [],
+      "value": "https://ph.shein.com/user/coupon"
+    }]
+  }, {
+    "id": "84096fe5-5b90-49f8-9b74-782320c47ce1",
+    "name": "UM06: Shein_MyProfileLink_Positive_06",
+    "commands": [{
+      "id": "1fa94bea-a7e3-4513-bf75-3658823aeeca",
+      "comment": "",
+      "command": "open",
+      "target": "https://ph.shein.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f22ad8f9-70ed-4bb9-8dad-06a5583311b1",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "941x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3fe75805-bb8d-4a69-b516-658bc7862534",
+      "comment": "",
+      "command": "click",
+      "target": "xpath=//a[@href='/user/index']",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_me_24px_shein", "css:finder"],
+        ["xpath=//a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e3aade46-0e59-433e-a43a-212c3255c22c",
+      "comment": "",
+      "command": "click",
+      "target": "css=.content:nth-child(2) .menu-item:nth-child(2) > .left",
+      "targets": [
+        ["css=.content:nth-child(2) .menu-item:nth-child(2) > .left", "css:finder"],
+        ["xpath=//div[@id='j-member-sidebar-ssr']/div/div/div/ul/li[2]/span", "xpath:idRelative"],
+        ["xpath=//body/div/div/div/div/div/div/div/div/ul/li[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'My Profile')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "a5ec1e7d-66ac-4dba-9c02-9706fd61a26b",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return document.URL;",
+      "targets": [],
+      "value": "theurl"
+    }, {
+      "id": "f1c2ae78-d47a-480d-87a1-2fe9858e67e3",
+      "comment": "",
+      "command": "assert",
+      "target": "theurl",
+      "targets": [],
+      "value": "https://ph.shein.com/user/account_setting"
+    }]
+  }, {
+    "id": "8c8e6118-e2a3-4a2b-8173-57ac698bc148",
+    "name": "WM02: Shein_WishlistSimilarItemsButton_Positive_02",
+    "commands": [{
+      "id": "61c30fa6-6a74-43c4-8642-6e7b88e81ce3",
+      "comment": "",
+      "command": "open",
+      "target": "https://ph.shein.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e797ac34-74c2-45e3-8b53-b2e5304247f0",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "947x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9505e9a1-b3dc-48ae-b000-44cb50361fde",
+      "comment": "",
+      "command": "click",
+      "target": "css=.sh_pc_sui_icon_nav_save_24px_shein",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_save_24px_shein", "css:finder"],
+        ["xpath=//div[3]/a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "acf7c309-3edd-42d1-aa52-3ddec0aa89fa",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.sui-button-common__opacity-white",
+      "targets": [
+        ["css=.sui-button-common__opacity-white", "css:finder"],
+        ["xpath=//section/div/div/div/button", "xpath:position"],
+        ["xpath=//button[contains(.,'ADD TO CART')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "08b3bcad-65c6-4109-98fb-b47295a737fe",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.sui-button-common__opacity-white",
+      "targets": [
+        ["css=.sui-button-common__opacity-white", "css:finder"],
+        ["xpath=//section/div/div/div/button", "xpath:position"],
+        ["xpath=//button[contains(.,'ADD TO CART')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "9874d21a-3b1b-44c1-862f-21038b673ced",
+      "comment": "",
+      "command": "click",
+      "target": "css=.sui-button-common__opacity-black",
+      "targets": [
+        ["css=.sui-button-common__opacity-black", "css:finder"],
+        ["xpath=//section/div/div/div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "35a19be6-978b-4810-ac57-471d6644dc28",
+      "comment": "",
+      "command": "click",
+      "target": "css=.similar-products__model-title",
+      "targets": [
+        ["css=.similar-products__model-title", "css:finder"],
+        ["xpath=//div[8]/div/div/div/div/div/div/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Similar Items')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "46870140-9c63-421e-945c-d7cf77d91fbd",
+      "comment": "",
+      "command": "assertText",
+      "target": "xpath=//span[@class='similar-products__model-title']",
+      "targets": [],
+      "value": "Similar Items"
+    }]
+  }, {
+    "id": "bbd7dde4-6386-440f-b0d0-81d0deadd7d6",
+    "name": "SM04: Shein_Terms&Conditions_Positive_04",
+    "commands": [{
+      "id": "a5ac0621-b0a2-4628-b28f-b822a79796e5",
+      "comment": "",
+      "command": "open",
+      "target": "https://ph.shein.com/user/auth/login?from=navTop",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "92109dd2-11a8-4559-a4eb-49ceeb0de748",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "935x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b06a0e16-0465-4d94-8fb7-164f90268913",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Terms & Conditions",
+      "targets": [
+        ["linkText=Terms & Conditions", "linkText"],
+        ["css=.j-terms-and-conditions", "css:finder"],
+        ["xpath=//a[contains(text(),'Terms & Conditions')]", "xpath:link"],
+        ["xpath=(//a[contains(@href, 'javascript:void(0);')])[2]", "xpath:href"],
+        ["xpath=//div[8]/a[2]", "xpath:position"],
+        ["xpath=//a[contains(.,'Terms & Conditions')]", "xpath:innerText"]
+      ],
+      "value": "",
+      "opensWindow": true,
+      "windowHandleName": "win2551",
+      "windowTimeout": 2000
+    }, {
+      "id": "4233e8e4-986b-494a-a9cb-1218eec91873",
+      "comment": "",
+      "command": "selectWindow",
+      "target": "handle=${win2551}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b0b91910-09d6-4068-b60b-f032527ffa5a",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return document.URL;",
+      "targets": [],
+      "value": "theurl"
+    }, {
+      "id": "71490dba-50ac-4f2d-bcc3-14d8b9760fd2",
+      "comment": "",
+      "command": "assert",
+      "target": "theurl",
+      "targets": [],
+      "value": "https://ph.shein.com/Terms-and-Conditions-a-399.html"
+    }]
+  }, {
+    "id": "885d86e7-f5ad-467a-99bb-c5e5f94b0cd6",
+    "name": "HM06: Shein_WishlistButton_Positive_06",
+    "commands": [{
+      "id": "41772a24-6079-40a0-bd92-b536ec87186c",
+      "comment": "",
+      "command": "open",
+      "target": "https://ph.shein.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0f0226f5-5218-4536-a58e-a7aeb2d31e5c",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "938x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ed46b7b6-ad00-47a1-abab-ea76c9323470",
+      "comment": "",
+      "command": "click",
+      "target": "css=.sh_pc_sui_icon_nav_save_24px_shein",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_save_24px_shein", "css:finder"],
+        ["xpath=//div[3]/a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0dac508f-6c80-441c-9f92-613f8e32764c",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return document.URL;",
+      "targets": [],
+      "value": "theurl"
+    }, {
+      "id": "c2e31cd7-cd6a-458b-80d0-7cb37c8b807a",
+      "comment": "",
+      "command": "assert",
+      "target": "theurl",
+      "targets": [],
+      "value": "https://ph.shein.com/user/wishlist?pf=topbar&activeTab=1"
+    }]
+  }, {
+    "id": "58c7059c-b2b1-4823-8022-7bdc5c203bd9",
+    "name": "WM05: Shein_SortBy_Positive_05",
+    "commands": [{
+      "id": "a03d75f9-f7a9-492b-b8e4-b429333dcd93",
+      "comment": "",
+      "command": "open",
+      "target": "https://ph.shein.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "569978cd-c3f0-464e-b497-e8ac1ea491ed",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "938x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "33a20f91-d9e0-441b-b34d-67ccc0a6dd28",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.sh_pc_sui_icon_nav_save_24px_shein",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_save_24px_shein", "css:finder"],
+        ["xpath=//div[3]/a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "080e7059-f4d6-4aed-9e30-8cc8264a7d1a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.sh_pc_sui_icon_nav_save_24px_shein",
+      "targets": [
+        ["css=.sh_pc_sui_icon_nav_save_24px_shein", "css:finder"],
+        ["xpath=//div[3]/a/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d0f63877-be87-4bf9-951d-3414fe07a179",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wishlist-category__dropdown-sort_pos-1:nth-child(2)",
+      "targets": [
+        ["css=.wishlist-category__dropdown-sort_pos-1:nth-child(2)", "css:finder"],
+        ["xpath=//div[2]/div[4]/div/div/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a0cf3447-7cc6-44cf-aa9b-7d6354c3dbd8",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "css=.active:nth-child(1) > span:nth-child(1)",
+      "targets": [
+        ["css=.active:nth-child(1) > span:nth-child(1)", "css:finder"],
+        ["xpath=//div[4]/div/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Price Low to High')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "16c2b4a5-f75e-4058-9283-85a4433dec40",
+    "name": "Item Details",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["e12ce0b9-ea28-466f-b027-a5b823a5e198", "890f0e65-12be-4e31-991b-e3a2094e0d43"]
+  }, {
+    "id": "a001c98d-1a23-4efc-8bd9-0242fcd64860",
+    "name": "Sign In & Registration",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["c0952c5d-c90b-40ab-9787-2e0da237c133", "bbd7dde4-6386-440f-b0d0-81d0deadd7d6"]
+  }, {
+    "id": "d09c8a42-6dec-4be7-a6f8-48bf1b867e5b",
+    "name": "Home",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["59faac49-6f20-46ef-b18a-8ecbdb05452d", "885d86e7-f5ad-467a-99bb-c5e5f94b0cd6"]
+  }, {
+    "id": "8aab59be-c0a2-4331-80dc-2ebdfe70115f",
+    "name": "User Detail",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["e4ef2998-4a57-460f-9df7-b8216843cb09", "84096fe5-5b90-49f8-9b74-782320c47ce1"]
+  }, {
+    "id": "a286954c-8251-4413-8ab7-0bfd24b70b30",
+    "name": "Wishlist",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["8c8e6118-e2a3-4a2b-8173-57ac698bc148", "58c7059c-b2b1-4823-8022-7bdc5c203bd9"]
+  }],
+  "urls": ["https://ph.shein.com/user/auth/login?from=navTop"],
+  "plugins": []
+}
