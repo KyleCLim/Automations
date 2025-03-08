@@ -1,0 +1,331 @@
+{
+  "name": "Sub - Projects Agent",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d4f021bb-fea3-4efa-a370-f8c29ec1c7dd",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "b6dd1391-135c-48b8-98da-3cb0c30698f1",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        320
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4kMtDg0iV665FFzw",
+          "name": "Personal Assistant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1HXSKZwhyIkLN2UIyB2_hGku4i_L4mVklmSDb1HWHb6Q",
+          "mode": "list",
+          "cachedResultName": "Projects - n8n Trial",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HXSKZwhyIkLN2UIyB2_hGku4i_L4mVklmSDb1HWHb6Q/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HXSKZwhyIkLN2UIyB2_hGku4i_L4mVklmSDb1HWHb6Q/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "6d5c8b38-d8a3-42ed-954c-0fad22f02d6e",
+      "name": "Get Projects",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        -460,
+        340
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ixHjaee8XenzZbHr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1HXSKZwhyIkLN2UIyB2_hGku4i_L4mVklmSDb1HWHb6Q",
+          "mode": "list",
+          "cachedResultName": "Projects - n8n Trial",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HXSKZwhyIkLN2UIyB2_hGku4i_L4mVklmSDb1HWHb6Q/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17rTnGg9telKLqqWrNlyzngatwyVYUwn9eXkQLBtJ-Ys/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Project": "={{ $fromAI(\"project\") }}",
+            "Notes": "={{ $fromAI(\"notes\") }}",
+            "Status": "={{ $fromAI(\"status\") }}"
+          },
+          "matchingColumns": [
+            "Project"
+          ],
+          "schema": [
+            {
+              "id": "Project",
+              "displayName": "Project",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5b3e6b4a-596f-431e-ae6a-7bff814ba744",
+      "name": "Update Projects",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        -300,
+        340
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ixHjaee8XenzZbHr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7ab380a2-a8d3-421c-ab4e-748ea8fb7904",
+              "name": "response",
+              "value": "Unable to perform task. Please try again.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cc9f166c-80c5-4815-8f2c-9b85fc5f46f1",
+      "name": "Try Again",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "39c2f302-03be-4464-a17a-d7cc481d6d44",
+              "name": "=response",
+              "value": "={{$json.output}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cadf451b-8945-4dab-8343-4673934bc1ef",
+      "name": "Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.query}}",
+        "options": {
+          "systemMessage": "=You are a google sheets agent. Your job is to take the user query and decide which tool to use to get the job done. \n\nYour tools:\nAdd Contact\nUse this tool to add a contact to the contact database\n\nUpdate Contact\nUse this tool to update a row for a specific contact. The fields for a contact are Name, Email, and Phone Number. If not all of these are specified to update, then keep them as they are. Example, if we want to update Nate Herk's email, pass along the updated email, but keep the current Name and Phone Number the same. \n\nGet Projects\nUse this tool to get project information and summarize it.\n\nUpdate Projects\nUse this tool to update a row for a specific contact. The fields for a contact are Project, Notes, and Status. If not all of these are specified to update, then keep them as they are. "
+        }
+      },
+      "id": "b09db37b-982a-4fd1-9d78-a8a618900f33",
+      "name": "Projects Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -480,
+        120
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Projects Agent (Sub Agent)\n- Tasked to do actions related to projects listed in Google Sheet",
+        "height": 740,
+        "width": 1060
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -820,
+        -120
+      ],
+      "id": "fdfa53db-db7c-418e-90fe-e89c21432d61",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {
+    "Execute Workflow Trigger": [
+      {
+        "json": {
+          "query": "can you get me all the projects and their status?"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Projects Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Projects Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Projects": {
+      "ai_tool": [
+        [
+          {
+            "node": "Projects Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Projects": {
+      "ai_tool": [
+        [
+          {
+            "node": "Projects Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Projects Agent": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Try Again",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d9048f42-439f-408f-a240-3e349ca5423f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "10c10bbd32280f5ab90070409f56f7895b081140e8bbc7b1ce7c61e1ddbbf3f8"
+  },
+  "id": "NfAaghUSK8XDSn8g",
+  "tags": [
+    {
+      "createdAt": "2025-02-15T07:48:28.335Z",
+      "updatedAt": "2025-02-15T07:48:28.335Z",
+      "id": "19v7HUSNtbbvXlxq",
+      "name": "Personal Assistant"
+    },
+    {
+      "createdAt": "2025-02-13T09:37:47.520Z",
+      "updatedAt": "2025-02-13T09:37:47.520Z",
+      "id": "Cd6BAIfaNfdLWAsL",
+      "name": "Tool"
+    }
+  ]
+}

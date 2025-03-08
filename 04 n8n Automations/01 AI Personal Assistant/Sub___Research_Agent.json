@@ -1,0 +1,270 @@
+{
+  "name": "Sub - Research Agent",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "31a1d43b-79d4-4679-977a-93406b0e6d0b",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "34a7bd9d-d501-47f3-b831-93ae377a9bc1",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -660,
+        380
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4kMtDg0iV665FFzw",
+          "name": "Personal Assistant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7ab380a2-a8d3-421c-ab4e-748ea8fb7904",
+              "name": "response",
+              "value": "Unable to perform task. Please try again.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "913a4e9d-ce19-4efc-8d41-77f7b4159629",
+      "name": "Try Again",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -120,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "39c2f302-03be-4464-a17a-d7cc481d6d44",
+              "name": "=response",
+              "value": "={{$json.output}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4d2fe5ec-d812-48db-be43-44563b536119",
+      "name": "Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -120,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a7075189-36a8-4222-91ec-81881b3706f9",
+      "name": "SerpAPI",
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        380
+      ],
+      "credentials": {
+        "serpApi": {
+          "id": "ec1yciU6vgy2XYdO",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "fe5ddf73-4e9a-4239-90a6-57023f10e1d6",
+      "name": "Wikipedia",
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "all",
+        "limit": "={{ $fromAI(\"limit\",\"number of articles\") }}",
+        "additionalFields": {
+          "keyword": "={{ $fromAI(\"keywords\",\"keywords for the articles\") }}"
+        }
+      },
+      "id": "ad5c66a2-c100-45b5-83a9-f44828506510",
+      "name": "Hacker News",
+      "type": "n8n-nodes-base.hackerNewsTool",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "You are a research assistant agent. You have Wikipedia, Hacker News API, and Serp API at your disposal. \n\nTo answer the user's question, first search wikipedia. If you can't find your answer there, then search articles using Hacker News API. If that doesn't work either, then use Serp API to answer the user's question.\n"
+        }
+      },
+      "id": "0cd52b53-7183-4517-8e72-ca7279d8b1ae",
+      "name": "Research Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -500,
+        120
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Research Agent (Sub Agent)\n- Tasked to do research related actions",
+        "height": 600,
+        "width": 920
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -820,
+        -60
+      ],
+      "id": "72beb610-13a3-4529-8ed6-fe8acd03127e",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {
+    "Execute Workflow Trigger": [
+      {
+        "json": {
+          "query": "What is Pi Network? What are it's update in the crypto world?"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hacker News": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Agent": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Try Again",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3f3b3e0d-2254-47a4-8a6e-69e11999caad",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "10c10bbd32280f5ab90070409f56f7895b081140e8bbc7b1ce7c61e1ddbbf3f8"
+  },
+  "id": "eIJPQgvOuyVMKuOy",
+  "tags": [
+    {
+      "createdAt": "2025-02-15T07:48:28.335Z",
+      "updatedAt": "2025-02-15T07:48:28.335Z",
+      "id": "19v7HUSNtbbvXlxq",
+      "name": "Personal Assistant"
+    },
+    {
+      "createdAt": "2025-02-13T09:37:47.520Z",
+      "updatedAt": "2025-02-13T09:37:47.520Z",
+      "id": "Cd6BAIfaNfdLWAsL",
+      "name": "Tool"
+    }
+  ]
+}

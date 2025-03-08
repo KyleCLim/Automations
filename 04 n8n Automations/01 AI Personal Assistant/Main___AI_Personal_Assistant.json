@@ -1,0 +1,576 @@
+{
+  "name": "Main - AI Personal Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "5b7a9ebe-f973-47a1-b53b-e47f4ef1914e",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        260
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4kMtDg0iV665FFzw",
+          "name": "Personal Assistant"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "92964fc7-aabe-494f-993e-39dd7e377516",
+      "name": "Calculator",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        760,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=You are a personal assistant AI Agent designed to handle various tasks efficiently. Your primary role is to manage contacts, emails, and calendar events for the user. You have access to three tools to help you fulfill requests:\n\nContacts Database: Use this when you need to look up contact information like an email address. You need to use this tool BEFORE sending an email or BEFORE getting emails.\n\nEmail Agent: Use this for handling all email-related actions, like sending messages, setting up replies, or forwarding emails.\n\nCalendar Agent: Use this for scheduling, updating, or managing calendar events.\n\nResearch Agent: Use this for researching about topics.\n\nCalculator: Use this to answer mathematical questions.\n\nProjects Agent: Use this tool to access our projects. We can update our projects of get information on our projects.\n\nWhen a task requires using one or more of these tools, make sure to identify which tool is most appropriate, pass along the relevant details, and execute the actions needed to complete the task. Your goal is to be proactive, precise, and organized in managing these resources to provide a smooth experience for the user.\n\nHere is the current time/date: {{ $now.format('DD')}}"
+        }
+      },
+      "id": "090c3b9c-55c5-4cc4-9ce2-84d017283346",
+      "name": "Personal Assistant",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        160,
+        0
+      ],
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        0
+      ],
+      "id": "5fa23f2f-614f-461b-80f0-d6cdd1d84263",
+      "name": "When chat message received",
+      "webhookId": "bf3b4168-46ce-416f-911e-2254c48012cc"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Call this tool to get contact data like email address or phone number",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appZ13ov8Vy5JaGwn",
+          "mode": "list",
+          "cachedResultName": "Contact Database",
+          "cachedResultUrl": "https://airtable.com/appZ13ov8Vy5JaGwn"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqf3IZdJ8pWngjd",
+          "mode": "list",
+          "cachedResultName": "contacts",
+          "cachedResultUrl": "https://airtable.com/appZ13ov8Vy5JaGwn/tblqf3IZdJ8pWngjd"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        -40,
+        260
+      ],
+      "id": "9b96cb4e-aba8-4887-9708-2281e00e426b",
+      "name": "Contacts Database",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "X26gMw665JZOj0Wp",
+          "name": "Airtable Personal Access Token account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "Email_Agent",
+        "description": "Call this tool to take any email actions",
+        "workflowId": {
+          "__rl": true,
+          "value": "9U8pQ5DcHE3qLMKY",
+          "mode": "list",
+          "cachedResultName": "Sub - Email Agent"
+        }
+      },
+      "id": "9c2f5ead-e0d8-42c3-9294-12f8fc14dc2e",
+      "name": "Email Agent",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        120,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "name": "Calendar_Agent",
+        "description": "Call this tool to take actions within Calendar",
+        "workflowId": {
+          "__rl": true,
+          "value": "0NtlJ41IozGhtFa6",
+          "mode": "list",
+          "cachedResultName": "🤖Calendar Agent"
+        }
+      },
+      "id": "56432a22-e9fb-4d51-bad3-31d87ee3ddae",
+      "name": "Calendar Agent",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        280,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "name": "Research_Agent",
+        "description": "Call this tool to search through Wikipedia, articles, or google to answer the user's question.",
+        "workflowId": {
+          "__rl": true,
+          "value": "Hgm5BTXAKjDnLOof",
+          "mode": "list",
+          "cachedResultName": "🤖Research Agent"
+        }
+      },
+      "id": "066e0bf6-15cf-48ac-a28c-fa797d2e15ad",
+      "name": "Research Agent",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "name": "Projects_Agent",
+        "description": "Call this tool to take action on our projects.",
+        "workflowId": {
+          "__rl": true,
+          "value": "NfAaghUSK8XDSn8g",
+          "mode": "list",
+          "cachedResultName": "Sub - Projects Agent"
+        }
+      },
+      "id": "e5f32e8c-5036-438f-b18f-ae5ddf721862",
+      "name": "Projects Agent",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        600,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "Gamut",
+        "toolDescription": "Use this information about Gamut.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        880,
+        120
+      ],
+      "id": "171bfbb6-7b43-4cca-96b7-a66b0913c68e",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "PeufTloDJ7i6brnj",
+          "name": "Supabase AI Assistant Account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -180,
+        260
+      ],
+      "id": "ccb7165f-b898-43b8-a27b-7f07703cf48b",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "i2N8G3OudtpBqMMq",
+          "name": "Postgres AI Assistant Memory"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1WAFJE1RheaTnWxI9gTgcRogcgW2q3kVT",
+          "mode": "list",
+          "cachedResultName": "Gamut - Contractor Handbook.docx",
+          "cachedResultUrl": "https://docs.google.com/document/d/1WAFJE1RheaTnWxI9gTgcRogcgW2q3kVT/edit?usp=drivesdk&ouid=113019087352031981428&rtpof=true&sd=true"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        100,
+        520
+      ],
+      "id": "31f55d2b-9bab-4364-9b63-4533be0fba91",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "x6fOnTHtgDp2eF8E",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        320,
+        520
+      ],
+      "id": "58bf66e1-d5bc-42c8-808d-af88ec35c84e",
+      "name": "Supabase Vector Store1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "PeufTloDJ7i6brnj",
+          "name": "Supabase AI Assistant Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        740
+      ],
+      "id": "2477d5fd-3cbb-4408-bad0-384aa666d0f5",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "4kMtDg0iV665FFzw",
+          "name": "Personal Assistant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        420,
+        760
+      ],
+      "id": "23dff78d-7559-42a4-b519-ecc5a4d269cd",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        440,
+        940
+      ],
+      "id": "4c2c0fbb-a99a-4c6c-b09a-027a3d0ee267",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        260
+      ],
+      "id": "b97891b2-0a0f-44cf-bdf8-2862e1f51f1f",
+      "name": "Embeddings OpenAI2",
+      "credentials": {
+        "openAiApi": {
+          "id": "4kMtDg0iV665FFzw",
+          "name": "Personal Assistant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Central Agent \n- This workflow triggers the user's query\n- Delegate tasks to appropriate agent depending on the user's query\n- Can retrieve information about files in Google Drive using the RAG technology",
+        "height": 600,
+        "width": 1700
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -160
+      ],
+      "id": "350920d0-9434-44ae-a47a-347b3fabf61a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Supabase File Uploader \n- This workflow uploads file from Google Drive to the Supabase Vector Store",
+        "height": 680,
+        "width": 1200,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        460
+      ],
+      "id": "66b7dcae-022d-4c29-817b-62253158fd33",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Personal Assistant",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Personal Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personal Assistant": {
+      "main": [
+        []
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Personal Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contacts Database": {
+      "ai_tool": [
+        [
+          {
+            "node": "Personal Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Personal Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Personal Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Personal Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Projects Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Personal Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "Personal Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Personal Assistant",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI2": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "828f63a0-d374-464b-bad5-c450b71ca665",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "10c10bbd32280f5ab90070409f56f7895b081140e8bbc7b1ce7c61e1ddbbf3f8"
+  },
+  "id": "iweVsdZwwDqD9Vw4",
+  "tags": [
+    {
+      "createdAt": "2025-02-15T07:48:28.335Z",
+      "updatedAt": "2025-02-15T07:48:28.335Z",
+      "id": "19v7HUSNtbbvXlxq",
+      "name": "Personal Assistant"
+    },
+    {
+      "createdAt": "2025-02-13T09:38:10.464Z",
+      "updatedAt": "2025-02-13T09:38:10.464Z",
+      "id": "6YXHEGi5aoQLufKw",
+      "name": "Main"
+    }
+  ]
+}

@@ -1,0 +1,391 @@
+{
+  "name": "Sub - Calendar Agent",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "f9366f5d-c47f-4623-b6d5-99709c9d8dd3",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -980,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "964b6d13-b997-45f7-9d31-2beac284a860",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -980,
+        340
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4kMtDg0iV665FFzw",
+          "name": "Personal Assistant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7ab380a2-a8d3-421c-ab4e-748ea8fb7904",
+              "name": "response",
+              "value": "Unable to perform task. Please try again.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9f8d7c2c-8af3-4bcf-9a5a-a9546464c130",
+      "name": "Try Again",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -240,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "39c2f302-03be-4464-a17a-d7cc481d6d44",
+              "name": "=response",
+              "value": "={{$json.output}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d8112c82-5979-4242-8176-a507a5aaff2c",
+      "name": "Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -240,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "kyleclarenzlim@gmail.com",
+          "mode": "list",
+          "cachedResultName": "kyleclarenzlim@gmail.com"
+        },
+        "start": "={{ $fromAI(\"starttime\",\"the time the user asks for the event to start\") }}",
+        "end": "={{ $fromAI(\"endtime\",\"the time the user asks for the event to end\") }}",
+        "additionalFields": {
+          "attendees": [],
+          "summary": "={{ $fromAI(\"name\",\"the name of the calendar event\") }}"
+        }
+      },
+      "id": "a3640584-15d5-4c91-a3e3-564191d1df7e",
+      "name": "Create Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.1,
+      "position": [
+        -580,
+        540
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FUVa230p9FvyCa68",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "kyleclarenzlim@gmail.com",
+          "mode": "list",
+          "cachedResultName": "kyleclarenzlim@gmail.com"
+        },
+        "start": "={{ $fromAI(\"starttime\",\"the time the user asks for the event to start\") }}",
+        "end": "={{ $fromAI(\"endtime\",\"the time the user asks for the event to end\") }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $fromAI(\"attendeeEmail\",\"the email of the user asks the event to be sceduled with\") }}"
+          ],
+          "summary": "={{ $fromAI(\"name\",\"the name of the calendar event\") }}"
+        }
+      },
+      "id": "69b48e0a-5f94-4035-b9cb-ecce360f58be",
+      "name": "Create Event with Attendee",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.1,
+      "position": [
+        -280,
+        440
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FUVa230p9FvyCa68",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "kyleclarenzlim@gmail.com",
+          "mode": "list",
+          "cachedResultName": "kyleclarenzlim@gmail.com"
+        },
+        "returnAll": true,
+        "options": {
+          "timeMin": "={{ $fromAI(\"oneDayBefore\",\"one day before the day that the user requested\") }}",
+          "timeMax": "={{ $fromAI(\"oneDayAfter\",\"one day after the day that the user requested\") }}"
+        }
+      },
+      "id": "d07ee23c-ceb2-42f9-9f9a-9d2636805475",
+      "name": "Get Events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.1,
+      "position": [
+        -420,
+        480
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FUVa230p9FvyCa68",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=# PERSONA\nYou are a calendar assistant. Your responsibilities include creating, getting, updating and deleting events in the user's calendar.\n\n**Calendar Management Tools**\n  - Use \"Create Event with Attendee\" when an event includes a participant.\n  - Use \"Create Event\" for solo events.\n  - Use \"Get Events\" to fetch calendar schedules when requested.\n  - Use \"Delete Events\" to delete an event. You must use \"Get Events\" first to get the ID of the event to delete.\n  - Use \"Update Event\" to update an event. You must use \"Get Events\" first to get the ID of the event to update.\n\n## NOTES\n  - Here is the current data/time: {{ $now }}\n  - If a duration for an event isn't specified, assume it will be one hour.\n  - If you are asked to check events, assume to look for events in the calendar 7 days from the current date and 5 previous days from the current date."
+        }
+      },
+      "id": "5ca99548-4cf3-48e9-8a42-634f29b35ad3",
+      "name": "Calendar Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -760,
+        140
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "kyleclarenzlim@gmail.com",
+          "mode": "list",
+          "cachedResultName": "kyleclarenzlim@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "updateFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -860,
+        440
+      ],
+      "id": "3ac614bf-7752-4527-9bd9-58557f2941d3",
+      "name": "Update Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FUVa230p9FvyCa68",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "kyleclarenzlim@gmail.com",
+          "mode": "list",
+          "cachedResultName": "kyleclarenzlim@gmail.com"
+        },
+        "eventId": "={{ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -720,
+        500
+      ],
+      "id": "ed37e456-235f-4cf7-9d11-d694b06dc71b",
+      "name": "Delete Events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FUVa230p9FvyCa68",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Calendar Agent (Sub Agent)\n- Tasked to do calendar related actions",
+        "height": 720,
+        "width": 1060
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1080,
+        -40
+      ],
+      "id": "7e9fb525-13f0-42fb-ac15-4fdffd3ab280",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {
+    "Execute Workflow Trigger": [
+      {
+        "json": {
+          "query": "Create an event tommorow title 'n8n tutorial', add kylelim2293@gmail.com as participant."
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Event with Attendee": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar Agent": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Try Again",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1d4d7c0a-1ad2-42b8-a872-e9967c702724",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "10c10bbd32280f5ab90070409f56f7895b081140e8bbc7b1ce7c61e1ddbbf3f8"
+  },
+  "id": "G2ay3He1wJ8DCyYu",
+  "tags": [
+    {
+      "createdAt": "2025-02-15T07:48:28.335Z",
+      "updatedAt": "2025-02-15T07:48:28.335Z",
+      "id": "19v7HUSNtbbvXlxq",
+      "name": "Personal Assistant"
+    },
+    {
+      "createdAt": "2025-02-13T09:37:47.520Z",
+      "updatedAt": "2025-02-13T09:37:47.520Z",
+      "id": "Cd6BAIfaNfdLWAsL",
+      "name": "Tool"
+    }
+  ]
+}
