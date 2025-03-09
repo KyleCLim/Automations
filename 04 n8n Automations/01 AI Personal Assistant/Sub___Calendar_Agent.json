@@ -27,7 +27,7 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "4kMtDg0iV665FFzw",
+          "id": "enter you openAI ID here",
           "name": "Personal Assistant"
         }
       }
@@ -103,7 +103,7 @@
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "FUVa230p9FvyCa68",
+          "id": "enter you google calendar ID here",
           "name": "Google Calendar account"
         }
       }
@@ -135,7 +135,7 @@
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "FUVa230p9FvyCa68",
+          "id": "enter you google calendar ID here",
           "name": "Google Calendar account"
         }
       }
@@ -165,7 +165,7 @@
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "FUVa230p9FvyCa68",
+          "id": "enter you google calendar ID here",
           "name": "Google Calendar account"
         }
       }
@@ -210,7 +210,7 @@
       "name": "Update Event",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "FUVa230p9FvyCa68",
+          "id": "enter you google calendar ID here",
           "name": "Google Calendar account"
         }
       }
@@ -237,7 +237,7 @@
       "name": "Delete Events",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "FUVa230p9FvyCa68",
+          "id": "enter you google calendar ID here",
           "name": "Google Calendar account"
         }
       }
