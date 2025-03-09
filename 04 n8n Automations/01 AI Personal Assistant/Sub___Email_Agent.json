@@ -27,7 +27,7 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "4kMtDg0iV665FFzw",
+          "id": "enter you openAI ID here",
           "name": "Personal Assistant"
         }
       }
@@ -75,7 +75,7 @@
       "webhookId": "92cd6a90-3772-4a4c-839b-01bfd03eb63d",
       "credentials": {
         "gmailOAuth2": {
-          "id": "dpS9qLOsMt0J6OB5",
+          "id": "enter you gmail ID here",
           "name": "Gmail account"
         }
       }
@@ -140,7 +140,7 @@
       "webhookId": "9dcc0688-f3d0-44b5-915d-5159e82931be",
       "credentials": {
         "gmailOAuth2": {
-          "id": "dpS9qLOsMt0J6OB5",
+          "id": "enter you gmail ID here",
           "name": "Gmail account"
         }
       }
@@ -164,7 +164,7 @@
       "webhookId": "d3344eed-66c4-4ae7-8427-8ec579444c8c",
       "credentials": {
         "gmailOAuth2": {
-          "id": "dpS9qLOsMt0J6OB5",
+          "id": "enter you gmail ID here",
           "name": "Gmail account"
         }
       }
@@ -184,7 +184,7 @@
       "webhookId": "2acf3398-940d-4942-a881-ec50c8f14c89",
       "credentials": {
         "gmailOAuth2": {
-          "id": "dpS9qLOsMt0J6OB5",
+          "id": "enter you gmail ID here",
           "name": "Gmail account"
         }
       }
@@ -205,7 +205,7 @@
       "webhookId": "d33d1c40-c0de-4038-a7e4-3ea2036f57b8",
       "credentials": {
         "gmailOAuth2": {
-          "id": "dpS9qLOsMt0J6OB5",
+          "id": "enter you gmail ID here",
           "name": "Gmail account"
         }
       }
@@ -227,7 +227,7 @@
       "webhookId": "4b132ab5-2420-4745-8bba-c4609c59449c",
       "credentials": {
         "gmailOAuth2": {
-          "id": "dpS9qLOsMt0J6OB5",
+          "id": "enter you gmail ID here",
           "name": "Gmail account"
         }
       }
@@ -250,7 +250,7 @@
       "webhookId": "d455c6f5-cfb6-4042-aa0a-c3e4dbe04b99",
       "credentials": {
         "gmailOAuth2": {
-          "id": "dpS9qLOsMt0J6OB5",
+          "id": "enter you gmail ID here",
           "name": "Gmail account"
         }
       }
