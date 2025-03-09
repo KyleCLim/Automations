@@ -27,7 +27,7 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "4kMtDg0iV665FFzw",
+          "id": "enter you openAI ID here",
           "name": "Personal Assistant"
         }
       }
@@ -60,7 +60,7 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "ixHjaee8XenzZbHr",
+          "id": "enter you google sheet ID here",
           "name": "Google Sheets account"
         }
       }
@@ -146,7 +146,7 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "ixHjaee8XenzZbHr",
+          "id": "enter you google sheet ID here",
           "name": "Google Sheets account"
         }
       }
