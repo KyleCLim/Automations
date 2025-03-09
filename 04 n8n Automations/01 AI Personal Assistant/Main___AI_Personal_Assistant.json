@@ -6,7 +6,7 @@
         "model": "gpt-4o",
         "options": {}
       },
-      "id": "5b7a9ebe-f973-47a1-b53b-e47f4ef1914e",
+      "id": "5b7a9ebe-f973-47a1-b53b-e47f4ef1914",
       "name": "OpenAI Chat Model",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
@@ -16,7 +16,7 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "4kMtDg0iV665FFzw",
+          "id": "enter you openAI ID here",
           "name": "Personal Assistant"
         }
       }
@@ -96,7 +96,7 @@
       "name": "Contacts Database",
       "credentials": {
         "airtableTokenApi": {
-          "id": "X26gMw665JZOj0Wp",
+          "id": "enter you airtable ID here",
           "name": "Airtable Personal Access Token account 2"
         }
       }
@@ -204,7 +204,7 @@
       "name": "Supabase Vector Store",
       "credentials": {
         "supabaseApi": {
-          "id": "PeufTloDJ7i6brnj",
+          "id": "enter you supabase ID here",
           "name": "Supabase AI Assistant Account"
         }
       }
@@ -221,7 +221,7 @@
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
-          "id": "i2N8G3OudtpBqMMq",
+          "id": "enter you postgres ID here",
           "name": "Postgres AI Assistant Memory"
         }
       }
@@ -248,7 +248,7 @@
       "name": "Google Drive",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "x6fOnTHtgDp2eF8E",
+          "id": "enter you google drive ID here",
           "name": "Google Drive account"
         }
       }
@@ -274,7 +274,7 @@
       "name": "Supabase Vector Store1",
       "credentials": {
         "supabaseApi": {
-          "id": "PeufTloDJ7i6brnj",
+          "id": "enter you supabase ID here",
           "name": "Supabase AI Assistant Account"
         }
       }
@@ -293,7 +293,7 @@
       "name": "Embeddings OpenAI1",
       "credentials": {
         "openAiApi": {
-          "id": "4kMtDg0iV665FFzw",
+          "id": "enter you openAI ID here",
           "name": "Personal Assistant"
         }
       }
@@ -339,7 +339,7 @@
       "name": "Embeddings OpenAI2",
       "credentials": {
         "openAiApi": {
-          "id": "4kMtDg0iV665FFzw",
+          "id": "enter you openAI ID here",
           "name": "Personal Assistant"
         }
       }
