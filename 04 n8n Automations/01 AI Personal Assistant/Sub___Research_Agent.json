@@ -27,7 +27,7 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "4kMtDg0iV665FFzw",
+          "id": "enter you openAI ID here",
           "name": "Personal Assistant"
         }
       }
@@ -92,7 +92,7 @@
       ],
       "credentials": {
         "serpApi": {
-          "id": "ec1yciU6vgy2XYdO",
+          "id": "enter you serp ID here",
           "name": "SerpAPI account"
         }
       }
