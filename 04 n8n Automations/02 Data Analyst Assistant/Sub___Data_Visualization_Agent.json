@@ -59,7 +59,7 @@
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "4kMtDg0iV665FFzw",
+          "id": "Enter your openAI credential",
           "name": "Personal Assistant"
         }
       }
