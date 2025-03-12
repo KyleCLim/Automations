@@ -17,7 +17,7 @@
     },
     {
       "parameters": {
-        "url": "http://app.nocodb.com/api/v2/tables/mes8iadm1g3tv5h/records",
+        "url": "Enter your nocodb URL with the corresponding table ID",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "nocoDbApiToken",
         "options": {}
@@ -32,7 +32,7 @@
       "name": "HTTP Request",
       "credentials": {
         "nocoDbApiToken": {
-          "id": "1uAQIdxQiCvowVKB",
+          "id": "Enter you nocodb ID",
           "name": "NocoDB Token account"
         }
       }
@@ -110,7 +110,7 @@
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "4kMtDg0iV665FFzw",
+          "id": "Enter your openAI credential",
           "name": "Personal Assistant"
         }
       }
@@ -191,7 +191,7 @@
       "name": "NocoDB",
       "credentials": {
         "nocoDbApiToken": {
-          "id": "1uAQIdxQiCvowVKB",
+          "id": "Enter your nocodb ID",
           "name": "NocoDB Token account"
         }
       }
