@@ -1,0 +1,325 @@
+{
+    "name": "Main - Customer Suppot Agent",
+    "nodes": [
+        {
+            "parameters": {
+                "conditions": {
+                    "options": {
+                        "caseSensitive": true,
+                        "leftValue": "",
+                        "typeValidation": "strict",
+                        "version": 2
+                    },
+                    "conditions": [
+                        {
+                            "id": "c7cd25e9-31ab-4c2a-8880-0148aea726c2",
+                            "leftValue": "={{ $json.output.pass }}",
+                            "rightValue": "",
+                            "operator": {
+                                "type": "boolean",
+                                "operation": "true",
+                                "singleValue": true
+                            }
+                        }
+                    ],
+                    "combinator": "and"
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 2.2,
+            "position": [1160, 500],
+            "id": "5199f274-c917-4b7c-ae96-e03e17a07458",
+            "name": "If"
+        },
+        {
+            "parameters": {
+                "jsonSchemaExample": "{\n\t\"pass\": true,\n\t\"feedback\": \"this is empty when pass is true\"\n}"
+            },
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "typeVersion": 1.2,
+            "position": [1020, 720],
+            "id": "2be5f377-c8d0-41d4-9204-ddcd560297e7",
+            "name": "Structured Output Parser"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "o3-mini",
+                    "mode": "list",
+                    "cachedResultName": "o3-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [500, 760],
+            "id": "e1de2b57-435c-4c30-8f5f-20332b2b59f2",
+            "name": "EO - o3 mini",
+            "credentials": {
+                "openAiApi": {
+                    "id": "Enter openAI ID here",
+                    "name": "Personal Assistant"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "resource": "thread",
+                "operation": "reply",
+                "threadId": "={{ $('Gmail Trigger1').first().json.threadId }}",
+                "messageId": "={{ $('Gmail Trigger1').first().json.id }}",
+                "message": "={{ $('Customer Support1').last().json.output }}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.gmail",
+            "typeVersion": 2.1,
+            "position": [1460, 480],
+            "id": "074af3a5-209d-4df7-a496-b150902057f2",
+            "name": "Gmail",
+            "webhookId": "58be091c-293b-4fcc-8c56-56da568e0637",
+            "credentials": {
+                "gmailOAuth2": {
+                    "id": "Enter gmail ID here",
+                    "name": "Gmail account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "mode": "raw",
+                "jsonOutput": "={\n  \"currentEmail\": {{ JSON.stringify($('Customer Support1').last().json.output) }},\n  \"feedback\": {{  JSON.stringify($json.output.feedback) }},\n  \"text\": {{  JSON.stringify($('Gmail Trigger1').first().json.text) }}\n}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [740, 740],
+            "id": "98340286-2b69-42c9-b8f1-33bf96b23f9b",
+            "name": "feedback"
+        },
+        {
+            "parameters": {
+                "inputText": "={{ $json.text }}",
+                "categories": {
+                    "categories": [
+                        {
+                            "category": "Customer Inquiry",
+                            "description": "Text where the user requests assistance, more information, or expresses a concern about a product or service."
+                        },
+                        {
+                            "category": "No Action Required",
+                            "description": "Text that does not ask a question, seek information, or require a direct response."
+                        }
+                    ]
+                },
+                "options": {
+                    "systemPromptTemplate": "You are a text classifier at Renz Automation Solutions.\nPlease classify the text provided by the user into one of the following categories: {categories}, and use the provided formatting instructions below. Don't explain, and only output the json."
+                }
+            },
+            "type": "@n8n/n8n-nodes-langchain.textClassifier",
+            "typeVersion": 1,
+            "position": [20, 520],
+            "id": "ae401001-905f-4275-bb72-5179a58836f1",
+            "name": "Classify Email"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "=Email Content: {{$json.output}}",
+                "hasOutputParser": true,
+                "options": {
+                    "systemMessage": "=You are the Email Evaluator for Renz Automation Solutions.\n\nYou will receive an email content\n\nEvaluate the email based on:\n- Clarity and completeness.\n- Tone (professional, friendly, etc.).\n- Proper sign-off as \"Kyle Clarenz Lim\".\n- Text should not include the \"Subject\"\n\nReturn your evaluation as valid JSON with one of the following formats:\n\n1. If the email passes all criteria:\n{\n  \"pass\": true\n}\n\n2. If the email does not meet all criteria:\n{\n  \"pass\": false,\n  \"feedback\": \"Provide concise, actionable suggestions here.\"\n}\n\nNo extra keys or text outside the JSON structure."
+                }
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 1.7,
+            "position": [840, 500],
+            "id": "82c92ca6-b74c-4a21-b4d6-0a8d7a280848",
+            "name": "Evaluator1"
+        },
+        {
+            "parameters": {
+                "pollTimes": {
+                    "item": [
+                        {
+                            "mode": "everyMinute"
+                        }
+                    ]
+                },
+                "simple": false,
+                "filters": {},
+                "options": {}
+            },
+            "type": "n8n-nodes-base.gmailTrigger",
+            "typeVersion": 1.2,
+            "position": [-260, 520],
+            "id": "61553445-111e-4a6b-bdca-309b28b707a0",
+            "name": "Gmail Trigger1",
+            "credentials": {
+                "gmailOAuth2": {
+                    "id": "Enter gmail ID here",
+                    "name": "Gmail account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "={{ $json.text }}",
+                "options": {
+                    "systemMessage": "=You are a Customer Support Specialist at TechSpark Solutions.\n\nYou will be provided with a customer inquiry\n\nPrepare a concise, polite, and helpful email response addressing the customer’s question or concern.  \n\nOutput only the final email text—no extra commentary or formatting.\n\n\n\n<feedback> (if any)\n{{ $json.feedback }}\n\n\n<preparedEmail> (if an email is already prepared, this is what the feedback is on)\n{{ $json.currentEmail }}\n</preparedEmail>\n</feedback>"
+                }
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 1.7,
+            "position": [460, 500],
+            "id": "c10c5e12-8c97-4d96-9c45-a692fa4735ac",
+            "name": "Customer Support1"
+        },
+        {
+            "parameters": {
+                "content": "## Main Agent for Customer support \n- Reply to customer's email inquiries.\n- May be added with RAG technology to have knowledgebase on a specific topic.",
+                "height": 760,
+                "width": 2100
+            },
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [-320, 260],
+            "id": "70b232a5-85dc-4199-9872-d725568c0ab5",
+            "name": "Sticky Note"
+        }
+    ],
+    "pinData": {},
+    "connections": {
+        "If": {
+            "main": [
+                [
+                    {
+                        "node": "Gmail",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "feedback",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Structured Output Parser": {
+            "ai_outputParser": [
+                [
+                    {
+                        "node": "Evaluator1",
+                        "type": "ai_outputParser",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "EO - o3 mini": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "Customer Support1",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    },
+                    {
+                        "node": "Evaluator1",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    },
+                    {
+                        "node": "Classify Email",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "feedback": {
+            "main": [
+                [
+                    {
+                        "node": "Customer Support1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Classify Email": {
+            "main": [
+                [
+                    {
+                        "node": "Customer Support1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Evaluator1": {
+            "main": [
+                [
+                    {
+                        "node": "If",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Gmail Trigger1": {
+            "main": [
+                [
+                    {
+                        "node": "Classify Email",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Customer Support1": {
+            "main": [
+                [
+                    {
+                        "node": "Evaluator1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "active": false,
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "versionId": "5c64f1eb-d569-4d68-8f17-f1d1ea703461",
+    "meta": {
+        "templateCredsSetupCompleted": true,
+        "instanceId": "10c10bbd32280f5ab90070409f56f7895b081140e8bbc7b1ce7c61e1ddbbf3f8"
+    },
+    "id": "4I3HBTvBt9SUoXpp",
+    "tags": [
+        {
+            "createdAt": "2025-02-13T09:38:10.464Z",
+            "updatedAt": "2025-02-13T09:38:10.464Z",
+            "id": "6YXHEGi5aoQLufKw",
+            "name": "Main"
+        },
+        {
+            "name": "Customer Support",
+            "id": "Qyps8lgkd53PffwA",
+            "createdAt": "2025-03-13T07:12:58.030Z",
+            "updatedAt": "2025-03-13T07:12:58.030Z"
+        }
+    ]
+}
