@@ -1,0 +1,42 @@
+The documentation for your "Sales Task Transfer" scenario has been created. Here are the details:
+
+Sales Task Transfer Scenario Documentation
+Purpose:
+This scenario automates the process of transferring sales tasks from one department to another within an Airtable database. It listens for incoming webhooks, retrieves task details, and based on the specified department, it creates a new record in the appropriate department's table while deleting the original task record.
+
+Modules Overview:
+gateway:CustomWebHook (Module ID: 2)
+
+Function: Entry point for the scenario, triggering the workflow when a custom webhook is called.
+airtable:ActionGetRecord (Module ID: 3)
+
+Function: Retrieves a specific record from an Airtable table based on the ID received from the webhook.
+builtin:BasicRouter (Module ID: 4)
+
+Function: Routes the workflow based on conditions defined for different departments.
+
+Sub-modules:
+
+airtable:ActionCreateRecord (Module ID: 7)
+
+Function: Creates a new record in the "Fulfillment" department's table if the condition for transferring to this department is met.
+Filter: Processes records where "Department to Transfer Into" is equal to "Fulfillment".
+airtable:ActionDeleteRecord (Module ID: 10)
+
+Function: Deletes the original task record from the source table after it has been successfully transferred to the Fulfillment department.
+airtable:ActionCreateRecord (Module ID: 8)
+
+Function: Creates a new record in the "Leadership" department's table if the condition for transferring to this department is met.
+Filter: Processes records where "Department to Transfer Into" is equal to "Leadership".
+airtable:ActionDeleteRecord (Module ID: 11)
+
+Function: Deletes the original task record from the source table after it has been successfully transferred to the Leadership department.
+airtable:ActionCreateRecord (Module ID: 9)
+
+Function: Creates a new record in the "Marketing" department's table if the condition for transferring to this department is met.
+Filter: Processes records where "Department to Transfer Into" is equal to "Marketing".
+airtable:ActionDeleteRecord (Module ID: 12)
+
+Function: Deletes the original task record from the source table after it has been successfully transferred to the Marketing department.
+Summary
+This scenario effectively streamlines the task transfer process across different departments in Airtable, ensuring that tasks are accurately recorded and outdated records are removed.

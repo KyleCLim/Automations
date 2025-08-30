@@ -1,0 +1,40 @@
+The documentation for your "Leadership Task Transfer" workflow has been created. Here are the details:
+
+Leadership Task Transfer Workflow Documentation
+Purpose:
+This scenario automates the process of transferring tasks between departments within an organization using Airtable. It receives tasks via a custom webhook, retrieves task details, and creates new records in the appropriate department's table based on the specified department. After successful transfer, the original record is deleted.
+
+Modules Included:
+gateway:CustomWebHook (Module ID: 2)
+
+Entry point for receiving data from an external source via a custom webhook.
+airtable:ActionGetRecord (Module ID: 3)
+
+Retrieves a specific record from an Airtable table using the ID provided by the webhook.
+builtin:BasicRouter (Module ID: 4)
+
+Routes the flow based on conditions defined for different departments.
+
+airtable:ActionCreateRecord (Module ID: 7)
+
+Creates a new record in the "Fulfillment" department if the condition is met.
+Filter: Checks if "Department to Transfer Into" is equal to "Fulfillment".
+airtable:ActionDeleteRecord (Module ID: 10)
+
+Deletes the original record after successful transfer to the Fulfillment department.
+airtable:ActionCreateRecord (Module ID: 8)
+
+Creates a new record in the "Marketing" department if the condition is met.
+Filter: Checks if "Department to Transfer Into" is equal to "Marketing".
+airtable:ActionDeleteRecord (Module ID: 11)
+
+Deletes the original record after successful transfer to the Marketing department.
+airtable:ActionCreateRecord (Module ID: 9)
+
+Creates a new record in the "Sales" department if the condition is met.
+Filter: Checks if "Department to Transfer Into" is equal to "Sales".
+airtable:ActionDeleteRecord (Module ID: 12)
+
+Deletes the original record after successful transfer to the Sales department.
+Overall Functionality:
+This scenario streamlines task management by efficiently routing tasks to the correct department while maintaining data integrity by removing original records.

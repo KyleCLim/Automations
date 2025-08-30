@@ -1,0 +1,39 @@
+The documentation for your workflow, "EOS Fulfillment Task Transfer," has been created. Here are the details:
+
+Purpose
+The "Fulfillment Task Transfer" scenario automates the process of transferring tasks between departments within an Airtable database. It listens for incoming webhooks, retrieves task details, creates new records in the appropriate department's table based on specified conditions, and deletes the original task record.
+
+Modules Overview
+gateway:CustomWebHook (Module ID: 2)
+
+Entry point for receiving data from external sources via a custom webhook.
+airtable:ActionGetRecord (Module ID: 3)
+
+Retrieves a specific record from an Airtable table using the ID provided by the webhook.
+builtin:BasicRouter (Module ID: 4)
+
+Routes the flow based on conditions defined for different departments.
+
+airtable:ActionCreateRecord (Module ID: 7)
+
+Creates a new record in the Marketing department's table if designated.
+Filter: Checks if "Department to Transfer Into" is equal to "Marketing".
+airtable:ActionDeleteRecord (Module ID: 10)
+
+Deletes the original task record from the source table after creating a new record in Marketing.
+airtable:ActionCreateRecord (Module ID: 8)
+
+Creates a new record in the Leadership department's table if designated.
+Filter: Checks if "Department to Transfer Into" is equal to "Leadership".
+airtable:ActionDeleteRecord (Module ID: 11)
+
+Deletes the original task record from the source table after creating a new record in Leadership.
+airtable:ActionCreateRecord (Module ID: 9)
+
+Creates a new record in the Sales department's table if designated.
+Filter: Checks if "Department to Transfer Into" is equal to "Sales".
+airtable:ActionDeleteRecord (Module ID: 12)
+
+Deletes the original task record from the source table after creating a new record in Sales.
+Summary
+This scenario efficiently manages task transfers between departments in Airtable, ensuring proper recording in new locations while removing them from their original entries.

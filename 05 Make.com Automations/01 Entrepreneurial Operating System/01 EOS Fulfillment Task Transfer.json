@@ -1,0 +1,1452 @@
+{
+    "name": "Fulfillment Task Transfer",
+    "flow": [
+        {
+            "id": 2,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 790923,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 300
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "Fulfillment EOS Task Transfer"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "airtable:ActionGetRecord",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 3320850
+            },
+            "mapper": {
+                "id": "",
+                "base": "",
+                "table": "",
+                "useColumnId": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 300
+                },
+                "restore": {
+                    "expect": {
+                        "base": {
+                            "mode": "chose",
+                            "label": "Sync9 EOS"
+                        },
+                        "table": {
+                            "mode": "chose",
+                            "label": "Fulfillment EOS"
+                        },
+                        "useColumnId": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "airtable3"
+                            },
+                            "label": "Sync9 Airtable OAuth connection (User ID: usrhv8WxvAWtpdHph)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:airtable3,airtable2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "useColumnId",
+                        "type": "boolean",
+                        "label": "Use Column ID",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Record ID",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "Owner Name",
+                        "type": "text",
+                        "label": "Owner Name"
+                    },
+                    {
+                        "name": "Section",
+                        "type": "text",
+                        "label": "Section"
+                    },
+                    {
+                        "name": "Task",
+                        "type": "text",
+                        "label": "Task",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Due Date",
+                        "time": false,
+                        "type": "date",
+                        "label": "Due Date"
+                    },
+                    {
+                        "name": "Note",
+                        "type": "text",
+                        "label": "Note",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Status",
+                        "type": "text",
+                        "label": "Status"
+                    },
+                    {
+                        "name": "Department to Transfer Into",
+                        "type": "text",
+                        "label": "Department to Transfer Into"
+                    },
+                    {
+                        "name": "Transfer Task",
+                        "type": "boolean",
+                        "label": "Transfer Task"
+                    },
+                    {
+                        "name": "Transfer",
+                        "spec": [
+                            {
+                                "name": "label",
+                                "type": "text",
+                                "label": "Label"
+                            },
+                            {
+                                "name": "url",
+                                "type": "url",
+                                "label": "URL"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Transfer"
+                    },
+                    {
+                        "name": "Created Time",
+                        "type": "date",
+                        "label": "Created Time"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 4,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 300
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 7,
+                            "module": "airtable:ActionCreateRecord",
+                            "version": 3,
+                            "parameters": {
+                                "__IMTCONN__": 3320850
+                            },
+                            "filter": {
+                                "name": "Task to Marketing Department",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{3.`Department to Transfer Into`}}",
+                                            "b": "Marketing",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "base": "apprKY597cgBfpfq2",
+                                "table": "tblfFQoCRoPiil6jj",
+                                "record": {
+                                    "fldBURHBiwW1E3Mui": "{{3.Task}}",
+                                    "fldDPTC2BRmdaV9s4": "{{3.Status}}",
+                                    "fldTVDS3vgn4VQR4v": "{{3.Section}}",
+                                    "fldVoCWDqaRDCdKvu": "{{3.`Owner Name`}}",
+                                    "fldeBZepeaUeWqff3": "{{3.`Due Date`}}",
+                                    "fldeIwrPI2Mt5ohCK": "{{3.Note}}"
+                                },
+                                "typecast": false,
+                                "useColumnId": false
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 900,
+                                    "y": 0
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "base": {
+                                            "label": "Sync9 EOS"
+                                        },
+                                        "table": {
+                                            "label": "Marketing EOS",
+                                            "nested": [
+                                                {
+                                                    "name": "record",
+                                                    "spec": [
+                                                        {
+                                                            "name": "fldVoCWDqaRDCdKvu",
+                                                            "type": "text",
+                                                            "label": "Owner Name"
+                                                        },
+                                                        {
+                                                            "mode": "edit",
+                                                            "name": "fldTVDS3vgn4VQR4v",
+                                                            "type": "select",
+                                                            "label": "Section",
+                                                            "dynamic": true,
+                                                            "options": [
+                                                                {
+                                                                    "label": "To-Do",
+                                                                    "value": "To-Do"
+                                                                },
+                                                                {
+                                                                    "label": "Rocks",
+                                                                    "value": "Rocks"
+                                                                },
+                                                                {
+                                                                    "label": "Issues",
+                                                                    "value": "Issues"
+                                                                },
+                                                                {
+                                                                    "label": "Headlines",
+                                                                    "value": "Headlines"
+                                                                }
+                                                            ],
+                                                            "validate": false
+                                                        },
+                                                        {
+                                                            "name": "fldBURHBiwW1E3Mui",
+                                                            "type": "text",
+                                                            "label": "Task",
+                                                            "multiline": true
+                                                        },
+                                                        {
+                                                            "name": "fldeBZepeaUeWqff3",
+                                                            "time": false,
+                                                            "type": "date",
+                                                            "label": "Due Date"
+                                                        },
+                                                        {
+                                                            "name": "fldeIwrPI2Mt5ohCK",
+                                                            "type": "text",
+                                                            "label": "Note",
+                                                            "multiline": true
+                                                        },
+                                                        {
+                                                            "mode": "edit",
+                                                            "name": "fldDPTC2BRmdaV9s4",
+                                                            "type": "select",
+                                                            "label": "Status",
+                                                            "dynamic": true,
+                                                            "options": [
+                                                                {
+                                                                    "label": "Not started",
+                                                                    "value": "Not started"
+                                                                },
+                                                                {
+                                                                    "label": "On-Track",
+                                                                    "value": "On-Track"
+                                                                },
+                                                                {
+                                                                    "label": "Done",
+                                                                    "value": "Done"
+                                                                },
+                                                                {
+                                                                    "label": "Off-Track",
+                                                                    "value": "Off-Track"
+                                                                }
+                                                            ],
+                                                            "validate": false
+                                                        },
+                                                        {
+                                                            "mode": "edit",
+                                                            "name": "fldN4HphV6WKC3Aph",
+                                                            "type": "select",
+                                                            "label": "Department to Transfer Into",
+                                                            "dynamic": true,
+                                                            "options": [
+                                                                {
+                                                                    "label": "Fulfillment",
+                                                                    "value": "Fulfillment"
+                                                                },
+                                                                {
+                                                                    "label": "Leadership",
+                                                                    "value": "Leadership"
+                                                                },
+                                                                {
+                                                                    "label": "Sales",
+                                                                    "value": "Sales"
+                                                                }
+                                                            ],
+                                                            "validate": false
+                                                        },
+                                                        {
+                                                            "name": "fldWqHkMWsSVrrOth",
+                                                            "type": "boolean",
+                                                            "label": "Transfer Task"
+                                                        }
+                                                    ],
+                                                    "type": "collection",
+                                                    "label": "Record"
+                                                }
+                                            ]
+                                        },
+                                        "record": {
+                                            "nested": {
+                                                "fldDPTC2BRmdaV9s4": {
+                                                    "mode": "edit"
+                                                },
+                                                "fldN4HphV6WKC3Aph": {
+                                                    "mode": "edit"
+                                                },
+                                                "fldTVDS3vgn4VQR4v": {
+                                                    "mode": "edit"
+                                                },
+                                                "fldWqHkMWsSVrrOth": {
+                                                    "mode": "chose"
+                                                }
+                                            }
+                                        },
+                                        "typecast": {
+                                            "mode": "chose"
+                                        },
+                                        "useColumnId": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "airtable3"
+                                            },
+                                            "label": "Sync9 Airtable OAuth connection (User ID: usrhv8WxvAWtpdHph)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:airtable3,airtable2",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "base",
+                                        "type": "select",
+                                        "label": "Base",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "typecast",
+                                        "type": "boolean",
+                                        "label": "Smart links",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "useColumnId",
+                                        "type": "boolean",
+                                        "label": "Use Column ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "table",
+                                        "type": "select",
+                                        "label": "Table",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "record",
+                                        "spec": [
+                                            {
+                                                "name": "fldVoCWDqaRDCdKvu",
+                                                "type": "text",
+                                                "label": "Owner Name"
+                                            },
+                                            {
+                                                "mode": "edit",
+                                                "name": "fldTVDS3vgn4VQR4v",
+                                                "type": "select",
+                                                "label": "Section"
+                                            },
+                                            {
+                                                "name": "fldBURHBiwW1E3Mui",
+                                                "type": "text",
+                                                "label": "Task"
+                                            },
+                                            {
+                                                "name": "fldeBZepeaUeWqff3",
+                                                "time": false,
+                                                "type": "date",
+                                                "label": "Due Date"
+                                            },
+                                            {
+                                                "name": "fldeIwrPI2Mt5ohCK",
+                                                "type": "text",
+                                                "label": "Note"
+                                            },
+                                            {
+                                                "mode": "edit",
+                                                "name": "fldDPTC2BRmdaV9s4",
+                                                "type": "select",
+                                                "label": "Status"
+                                            },
+                                            {
+                                                "mode": "edit",
+                                                "name": "fldN4HphV6WKC3Aph",
+                                                "type": "select",
+                                                "label": "Department to Transfer Into"
+                                            },
+                                            {
+                                                "name": "fldWqHkMWsSVrrOth",
+                                                "type": "boolean",
+                                                "label": "Transfer Task"
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Record"
+                                    }
+                                ],
+                                "interface": [
+                                    {
+                                        "name": "id",
+                                        "type": "text",
+                                        "label": "ID"
+                                    },
+                                    {
+                                        "name": "createdTime",
+                                        "type": "date",
+                                        "label": "Created Time"
+                                    },
+                                    {
+                                        "name": "Owner Name",
+                                        "type": "text",
+                                        "label": "Owner Name"
+                                    },
+                                    {
+                                        "name": "Section",
+                                        "type": "text",
+                                        "label": "Section"
+                                    },
+                                    {
+                                        "name": "Task",
+                                        "type": "text",
+                                        "label": "Task",
+                                        "multiline": true
+                                    },
+                                    {
+                                        "name": "Due Date",
+                                        "time": false,
+                                        "type": "date",
+                                        "label": "Due Date"
+                                    },
+                                    {
+                                        "name": "Note",
+                                        "type": "text",
+                                        "label": "Note",
+                                        "multiline": true
+                                    },
+                                    {
+                                        "name": "Status",
+                                        "type": "text",
+                                        "label": "Status"
+                                    },
+                                    {
+                                        "name": "Department to Transfer Into",
+                                        "type": "text",
+                                        "label": "Department to Transfer Into"
+                                    },
+                                    {
+                                        "name": "Transfer Task",
+                                        "type": "boolean",
+                                        "label": "Transfer Task"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 10,
+                            "module": "airtable:ActionDeleteRecord",
+                            "version": 3,
+                            "parameters": {
+                                "__IMTCONN__": 3320850
+                            },
+                            "mapper": {
+                                "id": "{{3.id}}",
+                                "base": "apprKY597cgBfpfq2",
+                                "table": "tbl2FIuZ3gCWg3VTf"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1200,
+                                    "y": 0
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "base": {
+                                            "mode": "chose",
+                                            "label": "Sync9 EOS"
+                                        },
+                                        "table": {
+                                            "mode": "chose",
+                                            "label": "Fulfillment EOS"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "airtable3"
+                                            },
+                                            "label": "Sync9 Airtable OAuth connection (User ID: usrhv8WxvAWtpdHph)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:airtable3,airtable2",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "base",
+                                        "type": "select",
+                                        "label": "Base",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "table",
+                                        "type": "select",
+                                        "label": "Table",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "id",
+                                        "type": "text",
+                                        "label": "Record ID",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 8,
+                            "module": "airtable:ActionCreateRecord",
+                            "version": 3,
+                            "parameters": {
+                                "__IMTCONN__": 3320850
+                            },
+                            "filter": {
+                                "name": "Task to Leadership Department",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{3.`Department to Transfer Into`}}",
+                                            "b": "Leadership",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "base": "apprKY597cgBfpfq2",
+                                "table": "tblmwPpL14WmUIh3q",
+                                "record": {
+                                    "fldBQcVOVqgyGFUKG": "{{3.Note}}",
+                                    "fldLD1ZKMbSFVzucg": "{{3.`Owner Name`}}",
+                                    "fldgOTeehyot3qZH3": "{{3.Task}}",
+                                    "fldlLkLmjT1Nh0We3": "{{3.`Due Date`}}",
+                                    "fldveaHlmbYd9dNj2": "{{3.Section}}",
+                                    "fldwM0Q0z2NZKwIrW": "{{3.Status}}"
+                                },
+                                "typecast": false,
+                                "useColumnId": false
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1088,
+                                    "y": 300
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "base": {
+                                            "label": "Sync9 EOS"
+                                        },
+                                        "table": {
+                                            "label": "Leadership EOS",
+                                            "nested": [
+                                                {
+                                                    "name": "record",
+                                                    "spec": [
+                                                        {
+                                                            "name": "fldLD1ZKMbSFVzucg",
+                                                            "type": "text",
+                                                            "label": "Owner Name"
+                                                        },
+                                                        {
+                                                            "mode": "edit",
+                                                            "name": "fldveaHlmbYd9dNj2",
+                                                            "type": "select",
+                                                            "label": "Section",
+                                                            "dynamic": true,
+                                                            "options": [
+                                                                {
+                                                                    "label": "To-Do",
+                                                                    "value": "To-Do"
+                                                                },
+                                                                {
+                                                                    "label": "Rocks",
+                                                                    "value": "Rocks"
+                                                                },
+                                                                {
+                                                                    "label": "Issues",
+                                                                    "value": "Issues"
+                                                                },
+                                                                {
+                                                                    "label": "Headlines",
+                                                                    "value": "Headlines"
+                                                                }
+                                                            ],
+                                                            "validate": false
+                                                        },
+                                                        {
+                                                            "name": "fldgOTeehyot3qZH3",
+                                                            "type": "text",
+                                                            "label": "Task",
+                                                            "multiline": true
+                                                        },
+                                                        {
+                                                            "name": "fldlLkLmjT1Nh0We3",
+                                                            "time": false,
+                                                            "type": "date",
+                                                            "label": "Due Date"
+                                                        },
+                                                        {
+                                                            "name": "fldBQcVOVqgyGFUKG",
+                                                            "type": "text",
+                                                            "label": "Note",
+                                                            "multiline": true
+                                                        },
+                                                        {
+                                                            "mode": "edit",
+                                                            "name": "fldwM0Q0z2NZKwIrW",
+                                                            "type": "select",
+                                                            "label": "Status",
+                                                            "dynamic": true,
+                                                            "options": [
+                                                                {
+                                                                    "label": "Not started",
+                                                                    "value": "Not started"
+                                                                },
+                                                                {
+                                                                    "label": "On-Track",
+                                                                    "value": "On-Track"
+                                                                },
+                                                                {
+                                                                    "label": "Done",
+                                                                    "value": "Done"
+                                                                },
+                                                                {
+                                                                    "label": "Off-Track",
+                                                                    "value": "Off-Track"
+                                                                }
+                                                            ],
+                                                            "validate": false
+                                                        },
+                                                        {
+                                                            "mode": "edit",
+                                                            "name": "fldbRvm3bHszaXAVO",
+                                                            "type": "select",
+                                                            "label": "Department to Transfer",
+                                                            "dynamic": true,
+                                                            "options": [
+                                                                {
+                                                                    "label": "Fulfillment",
+                                                                    "value": "Fulfillment"
+                                                                },
+                                                                {
+                                                                    "label": "Marketing",
+                                                                    "value": "Marketing"
+                                                                },
+                                                                {
+                                                                    "label": "Sales",
+                                                                    "value": "Sales"
+                                                                }
+                                                            ],
+                                                            "validate": false
+                                                        },
+                                                        {
+                                                            "name": "fld10ajxWFz4f3A0R",
+                                                            "type": "boolean",
+                                                            "label": "Transfer Task"
+                                                        }
+                                                    ],
+                                                    "type": "collection",
+                                                    "label": "Record"
+                                                }
+                                            ]
+                                        },
+                                        "record": {
+                                            "nested": {
+                                                "fld10ajxWFz4f3A0R": {
+                                                    "mode": "chose"
+                                                },
+                                                "fldbRvm3bHszaXAVO": {
+                                                    "mode": "edit"
+                                                },
+                                                "fldveaHlmbYd9dNj2": {
+                                                    "mode": "edit"
+                                                },
+                                                "fldwM0Q0z2NZKwIrW": {
+                                                    "mode": "edit"
+                                                }
+                                            }
+                                        },
+                                        "typecast": {
+                                            "mode": "chose"
+                                        },
+                                        "useColumnId": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "airtable3"
+                                            },
+                                            "label": "Sync9 Airtable OAuth connection (User ID: usrhv8WxvAWtpdHph)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:airtable3,airtable2",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "base",
+                                        "type": "select",
+                                        "label": "Base",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "typecast",
+                                        "type": "boolean",
+                                        "label": "Smart links",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "useColumnId",
+                                        "type": "boolean",
+                                        "label": "Use Column ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "table",
+                                        "type": "select",
+                                        "label": "Table",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "record",
+                                        "spec": [
+                                            {
+                                                "name": "fldLD1ZKMbSFVzucg",
+                                                "type": "text",
+                                                "label": "Owner Name"
+                                            },
+                                            {
+                                                "mode": "edit",
+                                                "name": "fldveaHlmbYd9dNj2",
+                                                "type": "select",
+                                                "label": "Section"
+                                            },
+                                            {
+                                                "name": "fldgOTeehyot3qZH3",
+                                                "type": "text",
+                                                "label": "Task"
+                                            },
+                                            {
+                                                "name": "fldlLkLmjT1Nh0We3",
+                                                "time": false,
+                                                "type": "date",
+                                                "label": "Due Date"
+                                            },
+                                            {
+                                                "name": "fldBQcVOVqgyGFUKG",
+                                                "type": "text",
+                                                "label": "Note"
+                                            },
+                                            {
+                                                "mode": "edit",
+                                                "name": "fldwM0Q0z2NZKwIrW",
+                                                "type": "select",
+                                                "label": "Status"
+                                            },
+                                            {
+                                                "mode": "edit",
+                                                "name": "fldbRvm3bHszaXAVO",
+                                                "type": "select",
+                                                "label": "Department to Transfer"
+                                            },
+                                            {
+                                                "name": "fld10ajxWFz4f3A0R",
+                                                "type": "boolean",
+                                                "label": "Transfer Task"
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Record"
+                                    }
+                                ],
+                                "interface": [
+                                    {
+                                        "name": "id",
+                                        "type": "text",
+                                        "label": "ID"
+                                    },
+                                    {
+                                        "name": "createdTime",
+                                        "type": "date",
+                                        "label": "Created Time"
+                                    },
+                                    {
+                                        "name": "Owner Name",
+                                        "type": "text",
+                                        "label": "Owner Name"
+                                    },
+                                    {
+                                        "name": "Section",
+                                        "type": "text",
+                                        "label": "Section"
+                                    },
+                                    {
+                                        "name": "Task",
+                                        "type": "text",
+                                        "label": "Task",
+                                        "multiline": true
+                                    },
+                                    {
+                                        "name": "Due Date",
+                                        "time": false,
+                                        "type": "date",
+                                        "label": "Due Date"
+                                    },
+                                    {
+                                        "name": "Note",
+                                        "type": "text",
+                                        "label": "Note",
+                                        "multiline": true
+                                    },
+                                    {
+                                        "name": "Status",
+                                        "type": "text",
+                                        "label": "Status"
+                                    },
+                                    {
+                                        "name": "Department to Transfer",
+                                        "type": "text",
+                                        "label": "Department to Transfer"
+                                    },
+                                    {
+                                        "name": "Transfer Task",
+                                        "type": "boolean",
+                                        "label": "Transfer Task"
+                                    },
+                                    {
+                                        "name": "Created Time",
+                                        "type": "date",
+                                        "label": "Created Time"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 11,
+                            "module": "airtable:ActionDeleteRecord",
+                            "version": 3,
+                            "parameters": {
+                                "__IMTCONN__": 3320850
+                            },
+                            "mapper": {
+                                "id": "{{3.id}}",
+                                "base": "apprKY597cgBfpfq2",
+                                "table": "tbl2FIuZ3gCWg3VTf"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1388,
+                                    "y": 300
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "base": {
+                                            "mode": "chose",
+                                            "label": "Sync9 EOS"
+                                        },
+                                        "table": {
+                                            "mode": "chose",
+                                            "label": "Fulfillment EOS"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "airtable3"
+                                            },
+                                            "label": "Sync9 Airtable OAuth connection (User ID: usrhv8WxvAWtpdHph)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:airtable3,airtable2",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "base",
+                                        "type": "select",
+                                        "label": "Base",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "table",
+                                        "type": "select",
+                                        "label": "Table",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "id",
+                                        "type": "text",
+                                        "label": "Record ID",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 9,
+                            "module": "airtable:ActionCreateRecord",
+                            "version": 3,
+                            "parameters": {
+                                "__IMTCONN__": 3320850
+                            },
+                            "filter": {
+                                "name": "Task to Sales Department",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{3.`Department to Transfer Into`}}",
+                                            "b": "Sales",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "base": "apprKY597cgBfpfq2",
+                                "table": "tblsFRjPwArdV3S1S",
+                                "record": {
+                                    "fld11KEhGdfK2rkEV": "{{3.Note}}",
+                                    "fldBGSZ6lD1nnJw3I": "{{3.`Owner Name`}}",
+                                    "fldSh8H86rqy1xvJR": "{{3.`Due Date`}}",
+                                    "fldVSiZbJmRYk3C6d": "{{3.Task}}",
+                                    "fldeWqpAWeubRrdJs": "{{3.Section}}",
+                                    "fldtZlaZKXGxVSJYn": "{{3.Status}}"
+                                },
+                                "typecast": false,
+                                "useColumnId": false
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 900,
+                                    "y": 600
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "base": {
+                                            "label": "Sync9 EOS"
+                                        },
+                                        "table": {
+                                            "label": "Sales EOS",
+                                            "nested": [
+                                                {
+                                                    "name": "record",
+                                                    "spec": [
+                                                        {
+                                                            "name": "fldBGSZ6lD1nnJw3I",
+                                                            "type": "text",
+                                                            "label": "Owner Name"
+                                                        },
+                                                        {
+                                                            "mode": "edit",
+                                                            "name": "fldeWqpAWeubRrdJs",
+                                                            "type": "select",
+                                                            "label": "Section",
+                                                            "dynamic": true,
+                                                            "options": [
+                                                                {
+                                                                    "label": "To-Do",
+                                                                    "value": "To-Do"
+                                                                },
+                                                                {
+                                                                    "label": "Rocks",
+                                                                    "value": "Rocks"
+                                                                },
+                                                                {
+                                                                    "label": "Issues",
+                                                                    "value": "Issues"
+                                                                },
+                                                                {
+                                                                    "label": "Headlines",
+                                                                    "value": "Headlines"
+                                                                }
+                                                            ],
+                                                            "validate": false
+                                                        },
+                                                        {
+                                                            "name": "fldVSiZbJmRYk3C6d",
+                                                            "type": "text",
+                                                            "label": "Task",
+                                                            "multiline": true
+                                                        },
+                                                        {
+                                                            "name": "fldSh8H86rqy1xvJR",
+                                                            "time": false,
+                                                            "type": "date",
+                                                            "label": "Due Date"
+                                                        },
+                                                        {
+                                                            "name": "fld11KEhGdfK2rkEV",
+                                                            "type": "text",
+                                                            "label": "Note",
+                                                            "multiline": true
+                                                        },
+                                                        {
+                                                            "mode": "edit",
+                                                            "name": "fldtZlaZKXGxVSJYn",
+                                                            "type": "select",
+                                                            "label": "Status",
+                                                            "dynamic": true,
+                                                            "options": [
+                                                                {
+                                                                    "label": "Not started",
+                                                                    "value": "Not started"
+                                                                },
+                                                                {
+                                                                    "label": "On-Track",
+                                                                    "value": "On-Track"
+                                                                },
+                                                                {
+                                                                    "label": "Done",
+                                                                    "value": "Done"
+                                                                },
+                                                                {
+                                                                    "label": "Off-Track",
+                                                                    "value": "Off-Track"
+                                                                }
+                                                            ],
+                                                            "validate": false
+                                                        },
+                                                        {
+                                                            "mode": "edit",
+                                                            "name": "fldury3MxUoW2B2tm",
+                                                            "type": "select",
+                                                            "label": "Department to Transfer",
+                                                            "dynamic": true,
+                                                            "options": [
+                                                                {
+                                                                    "label": "Fulfillment",
+                                                                    "value": "Fulfillment"
+                                                                },
+                                                                {
+                                                                    "label": "Marketing",
+                                                                    "value": "Marketing"
+                                                                },
+                                                                {
+                                                                    "label": "Leadership",
+                                                                    "value": "Leadership"
+                                                                }
+                                                            ],
+                                                            "validate": false
+                                                        },
+                                                        {
+                                                            "name": "fld5DK1KmHViOcHO1",
+                                                            "type": "boolean",
+                                                            "label": "Transfer Task"
+                                                        }
+                                                    ],
+                                                    "type": "collection",
+                                                    "label": "Record"
+                                                }
+                                            ]
+                                        },
+                                        "record": {
+                                            "nested": {
+                                                "fld5DK1KmHViOcHO1": {
+                                                    "mode": "chose"
+                                                },
+                                                "fldeWqpAWeubRrdJs": {
+                                                    "mode": "edit"
+                                                },
+                                                "fldtZlaZKXGxVSJYn": {
+                                                    "mode": "edit"
+                                                },
+                                                "fldury3MxUoW2B2tm": {
+                                                    "mode": "edit"
+                                                }
+                                            }
+                                        },
+                                        "typecast": {
+                                            "mode": "chose"
+                                        },
+                                        "useColumnId": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "airtable3"
+                                            },
+                                            "label": "Sync9 Airtable OAuth connection (User ID: usrhv8WxvAWtpdHph)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:airtable3,airtable2",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "base",
+                                        "type": "select",
+                                        "label": "Base",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "typecast",
+                                        "type": "boolean",
+                                        "label": "Smart links",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "useColumnId",
+                                        "type": "boolean",
+                                        "label": "Use Column ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "table",
+                                        "type": "select",
+                                        "label": "Table",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "record",
+                                        "spec": [
+                                            {
+                                                "name": "fldBGSZ6lD1nnJw3I",
+                                                "type": "text",
+                                                "label": "Owner Name"
+                                            },
+                                            {
+                                                "mode": "edit",
+                                                "name": "fldeWqpAWeubRrdJs",
+                                                "type": "select",
+                                                "label": "Section"
+                                            },
+                                            {
+                                                "name": "fldVSiZbJmRYk3C6d",
+                                                "type": "text",
+                                                "label": "Task"
+                                            },
+                                            {
+                                                "name": "fldSh8H86rqy1xvJR",
+                                                "time": false,
+                                                "type": "date",
+                                                "label": "Due Date"
+                                            },
+                                            {
+                                                "name": "fld11KEhGdfK2rkEV",
+                                                "type": "text",
+                                                "label": "Note"
+                                            },
+                                            {
+                                                "mode": "edit",
+                                                "name": "fldtZlaZKXGxVSJYn",
+                                                "type": "select",
+                                                "label": "Status"
+                                            },
+                                            {
+                                                "mode": "edit",
+                                                "name": "fldury3MxUoW2B2tm",
+                                                "type": "select",
+                                                "label": "Department to Transfer"
+                                            },
+                                            {
+                                                "name": "fld5DK1KmHViOcHO1",
+                                                "type": "boolean",
+                                                "label": "Transfer Task"
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Record"
+                                    }
+                                ],
+                                "interface": [
+                                    {
+                                        "name": "id",
+                                        "type": "text",
+                                        "label": "ID"
+                                    },
+                                    {
+                                        "name": "createdTime",
+                                        "type": "date",
+                                        "label": "Created Time"
+                                    },
+                                    {
+                                        "name": "Owner Name",
+                                        "type": "text",
+                                        "label": "Owner Name"
+                                    },
+                                    {
+                                        "name": "Section",
+                                        "type": "text",
+                                        "label": "Section"
+                                    },
+                                    {
+                                        "name": "Task",
+                                        "type": "text",
+                                        "label": "Task",
+                                        "multiline": true
+                                    },
+                                    {
+                                        "name": "Due Date",
+                                        "time": false,
+                                        "type": "date",
+                                        "label": "Due Date"
+                                    },
+                                    {
+                                        "name": "Note",
+                                        "type": "text",
+                                        "label": "Note",
+                                        "multiline": true
+                                    },
+                                    {
+                                        "name": "Status",
+                                        "type": "text",
+                                        "label": "Status"
+                                    },
+                                    {
+                                        "name": "Department to Transfer",
+                                        "type": "text",
+                                        "label": "Department to Transfer"
+                                    },
+                                    {
+                                        "name": "Transfer Task",
+                                        "type": "boolean",
+                                        "label": "Transfer Task"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 12,
+                            "module": "airtable:ActionDeleteRecord",
+                            "version": 3,
+                            "parameters": {
+                                "__IMTCONN__": 3320850
+                            },
+                            "mapper": {
+                                "id": "{{3.id}}",
+                                "base": "apprKY597cgBfpfq2",
+                                "table": "tbl2FIuZ3gCWg3VTf"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1200,
+                                    "y": 600
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "base": {
+                                            "mode": "chose",
+                                            "label": "Sync9 EOS"
+                                        },
+                                        "table": {
+                                            "mode": "chose",
+                                            "label": "Fulfillment EOS"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "airtable3"
+                                            },
+                                            "label": "Sync9 Airtable OAuth connection (User ID: usrhv8WxvAWtpdHph)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:airtable3,airtable2",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "base",
+                                        "type": "select",
+                                        "label": "Base",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "table",
+                                        "type": "select",
+                                        "label": "Table",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "id",
+                                        "type": "text",
+                                        "label": "Record ID",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}

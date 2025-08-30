@@ -1,0 +1,40 @@
+The documentation for your "Marketing Task Transfer" workflow has been created. Here’s a detailed overview:
+
+Marketing Task Transfer Workflow Documentation
+Purpose:
+This scenario automates the transfer of marketing tasks between departments within an Airtable database. It listens for incoming webhooks, retrieves task details, and based on the specified department, creates a new record in the appropriate department's table while deleting the original task record.
+
+Modules Overview:
+gateway:CustomWebHook (Module ID: 2)
+
+Entry point for the scenario, receiving data from external sources via a custom webhook.
+airtable:ActionGetRecord (Module ID: 3)
+
+Retrieves a specific record from an Airtable base using the ID provided by the webhook.
+builtin:BasicRouter (Module ID: 4)
+
+Routes the flow based on conditions defined for different departments.
+
+airtable:ActionCreateRecord (Module ID: 7)
+
+Creates a new record in the "Fulfillment" department's table if the task is designated for that department.
+Filter: Checks if "Department to Transfer Into" is equal to "Fulfillment".
+airtable:ActionDeleteRecord (Module ID: 10)
+
+Deletes the original task record from the marketing table after successful transfer to the Fulfillment department.
+airtable:ActionCreateRecord (Module ID: 8)
+
+Creates a new record in the "Leadership" department's table if the task is designated for that department.
+Filter: Checks if "Department to Transfer Into" is equal to "Leadership".
+airtable:ActionDeleteRecord (Module ID: 11)
+
+Deletes the original task record from the marketing table after successful transfer to the Leadership department.
+airtable:ActionCreateRecord (Module ID: 9)
+
+Creates a new record in the "Sales" department's table if the task is designated for that department.
+Filter: Checks if "Department to Transfer Into" is equal to "Sales".
+airtable:ActionDeleteRecord (Module ID: 12)
+
+Deletes the original task record from the marketing table after successful transfer to the Sales department.
+Summary
+This scenario effectively streamlines the task transfer process across different departments in Airtable, ensuring accurate task management.
