@@ -1,0 +1,477 @@
+{
+  "name": "Kyle - Marketing Video Gen (Gemini: Text-Video)",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "61276497-3ceb-47b5-b938-4203123e32e6",
+              "name": "=prompt",
+              "value": "={{ $json.output.improvedPrompt }}",
+              "type": "string"
+            },
+            {
+              "id": "1ec431f0-9ba4-4eaa-b899-4a1151fe9909",
+              "name": "userID",
+              "value": "={{ $json.output.userID }}",
+              "type": "number"
+            },
+            {
+              "id": "9edc42fb-0ccc-4424-b47e-cdb1751a46e0",
+              "name": "conversationID",
+              "value": "={{ $json.output.conversationID }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "3426905c-4616-48a6-876b-bdff01281033",
+      "name": "Workflow Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -672,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "modelId": {
+          "__rl": true,
+          "value": "models/veo-3.0-fast-generate-001",
+          "mode": "list",
+          "cachedResultName": "models/veo-3.0-fast-generate-001"
+        },
+        "prompt": "={{ $json.prompt }}",
+        "returnAs": "url",
+        "options": {}
+      },
+      "id": "d263f801-79fa-4f20-8c0e-661197d8b4e5",
+      "name": "Generate Video",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "conversationID"
+            },
+            {
+              "name": "sessionID"
+            },
+            {
+              "name": "marketingdirectorMessage"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1408,
+        176
+      ],
+      "id": "89c6a4d3-d99c-43be-aefc-fb28bcb0ddcf",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        432
+      ],
+      "id": "011dd3b4-1949-475b-879d-a393610b175f",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "url": "https://narrasoft.com/types-camera-shots-angles/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [
+        -672,
+        416
+      ],
+      "id": "903a8694-d8a7-4e06-b044-b44f773385cd",
+      "name": "Video Shots & Angles"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"improvedPrompt\": \"The improved prompt from the AI agent for the marketing video\",\n    \"userID\": \"564\",\n    \"conversationID\": \"209\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -464,
+        416
+      ],
+      "id": "dd7630ed-31f7-451e-a64f-72706973d874",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=User ID: {{ $json.sessionID }}\nConversation ID: {{ $json.conversationID }}\nUser Message: {{ $json.marketingdirectorMessage }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are the \"Marketing Video Prompt Optimizer\", a highly specialized AI agent whose sole purpose is to transform a user's raw text idea into the single, best possible, high-performing marketing video prompt. Your output will be used directly to generate a video.\n\nYour expertise lies in marketing, persuasive communication, and cinematic best practices relevant to advertising and brand promotion.\n\n## Core Directives & Goal\n1. Analyze and Optimize: Review the user's initial prompt and identify its core marketing objective (e.g., brand awareness, lead generation, product feature highlight).\n\n2. Enhance Marketing Appeal: Rephrase and expand the prompt to be maximally engaging, persuasive, and targeted to the intended audience.\n\n3. Specify Video Aesthetics: Add precise, creative, and technical details to ensure the final video is visually stunning and aligns with modern marketing standards.\n\n4. Final Output: Your response must be the final, optimized text prompt only, ready for video generation. Do not include any commentary or explanation.\n\n\n## Mandatory Inclusions (Use Tool Knowledge)\n- Camera Shot and Angle Determination: You must utilize the knowledge base tool named \"Video Shots & Angles\" to determine and specify the single most effective camera shot and angle for the video's core marketing message. (e.g., a close-up shot for product detail, a wide shot for establishing a sense of scale, a low angle for power).\n\n- Marketing Keywords: Embed strong marketing/advertising keywords to enhance the persuasive tone and visual quality (e.g., high-fidelity, emotionally resonant, viral potential, clean aesthetic).\n\n\n## Output Format & Constraints\nGenerate a single, coherent paragraph that functions as the final video prompt. Ensure it includes:\n\n1. Subject/Product: What is the video about?\n\n2. Action/Message: What is the core persuasive message or action?\n\n3. Visual Style: Specify color palette, lighting, and mood.\n\n4. Target Shot/Angle (from the tool): Explicitly name the determined shot and angle.\n\n\n## Example Prompt Structure (for your reference, not the agent's output):\n\n\"[Optimized Description of Product/Service]... Showcasing [Key Benefit] with a clean aesthetic and vibrant, modern color palette. Use dynamic studio lighting. The desired camera configuration is a [Specific Camera Shot, e.g., Medium Close-Up] from a [Specific Camera Angle, e.g., Eye-Level Angle] to create a strong, personal connection with the viewer and emphasize the product's unique design. The overall feel should be high-fidelity and emotionally resonant for maximum viral potential.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1056,
+        176
+      ],
+      "id": "22fee723-3b85-46eb-9a25-c849bfb4ef38",
+      "name": "Marketing Video Prompt Optimizer"
+    },
+    {
+      "parameters": {
+        "jsCode": "const key = $input.first().json.Key;\nconst url = `https://oosshrnsacdlqpittaxr.supabase.co/storage/v1/object/public/${key}`;\n\nreturn [{ json: { videoUrl: url } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        544
+      ],
+      "id": "0b5ad0d4-dbe4-4dea-927c-4c731db93c39",
+      "name": "Code in JavaScript",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "download",
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        176
+      ],
+      "id": "75a17690-8962-408b-a7dc-7a822f99808f",
+      "name": "Download a video1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://storage.googleapis.com/upload/storage/v1/b/storage_bucket_here/o?uploadType=media&name=tenants/1/ai/marketing-videos/{{ Date.now() }}_{{ $json.fileName }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "video/mp4"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        0,
+        176
+      ],
+      "id": "34b0aa40-acd0-4cf0-86d1-5453bbcd77bd",
+      "name": "GoogleCloudStorage"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://your_own_account_here.supabase.co/storage/v1/object/veavideos/{{ Date.now() }}_{{ $json.fileName }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer Your_Key_Here"
+            },
+            {
+              "name": "Content-Type",
+              "value": "video/mp4"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -48,
+        544
+      ],
+      "id": "8e626708-f209-43fa-852b-f64dfe4d58d2",
+      "name": "SupabaseStorage",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\n\n// Get these from your Service Account JSON key file\nconst serviceAccountEmail = 'your_service_account_email.iam.gserviceaccount.com';\n\n// Paste your private key from the JSON file (the whole thing including BEGIN/END)\nconst privateKey = `Your_Private_Key_Here`;\n\nconst response = $input.first().json;\nconst bucket = response.bucket;\nconst objectName = response.name;\n\n// URL expires in 7 days (604800 seconds)\nconst expirationSeconds = 315360000;\nconst expiration = Math.floor(Date.now() / 1000) + expirationSeconds;\n\n// Create signature\nconst stringToSign = `GET\\n\\n\\n${expiration}\\n/${bucket}/${objectName}`;\nconst sign = crypto.createSign('RSA-SHA256');\nsign.update(stringToSign);\nconst signature = encodeURIComponent(sign.sign(privateKey, 'base64'));\n\nconst signedUrl = `https://storage.googleapis.com/${bucket}/${objectName}?GoogleAccessId=${serviceAccountEmail}&Expires=${expiration}&Signature=${signature}`;\n\nreturn [{ \n  json: { \n    videoUrl: signedUrl,\n    expiresAt: new Date(expiration * 1000).toISOString()\n  } \n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        176
+      ],
+      "id": "c4e31c34-3a9e-47bb-ab49-17ae89dc4507",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "content": "## Generate, Download and Store via Google Gemini and Google Cloud Storage \n- First, setup your account in  Google Console. Enable and activate related API services like Gemini, Cloud, Generative Language, etc.",
+        "height": 400,
+        "width": 592
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "04fa5b75-9c61-4ab4-9f08-d59f7f3c3dce",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Format Desired Output via Code\n- Format your output here. This will depend on how you want your result to recieved in the workflow calling this one.",
+        "height": 400,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        176,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "12d0354d-923e-48c9-8463-8ae27fdb9742",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Spare System for Video Storage and Output Formatting\n- In case Google Storage is unavailable, you can use Supabase for storage.",
+        "height": 352,
+        "width": 768,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "eed453a2-39af-4b4f-bb97-c7f338cd8a71",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Setup Variables\n- You can setup your variables here for easier tracking",
+        "height": 400,
+        "width": 288,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "ff6a97ea-abc6-4c10-b7c3-cfc5a24d2981",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Knowledgebase for Video Shots & Angles and Format Desired Result from the AI",
+        "height": 352,
+        "width": 464
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "6e68a26a-7566-40ad-8d28-163d145d4609",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Marketing Video Prompt Optimizer\n- This AI agent will edit the user prompt and optimize it with the proper video shots and angles depending on how it analyze the user's request.",
+        "height": 400,
+        "width": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1168,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "1bee663b-057b-47c6-bd6a-c8170fc7d778",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "conversationID": "292",
+          "sessionID": "565",
+          "marketingdirectorMessage": "User Request: Generate a hyper-realistic video of a baby playing in the playground.\n\nUser Context:\n- Name: Luke Fernandez\n- Business: Graphic Design Services targeting celebrities\n- Content Type Needed: Video\n- Style: Hyper-realistic\n- Subject: Baby playing in playground\n\nAction Required: Create/generate video content as requested by the user."
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Workflow Configuration": {
+      "main": [
+        [
+          {
+            "node": "Generate Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video": {
+      "main": [
+        [
+          {
+            "node": "Download a video1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Marketing Video Prompt Optimizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Marketing Video Prompt Optimizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video Shots & Angles": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Video Prompt Optimizer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Marketing Video Prompt Optimizer",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Video Prompt Optimizer": {
+      "main": [
+        [
+          {
+            "node": "Workflow Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download a video1": {
+      "main": [
+        [
+          {
+            "node": "GoogleCloudStorage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SupabaseStorage": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GoogleCloudStorage": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6f17f502-2df4-46e0-925c-0edc1c71b563",
+  "meta": {
+    "instanceId": "61c77e6c56f98333453e4a094a95b4b00ad456e86702e7e79068f02608ef70e8"
+  },
+  "id": "odF2Il6aaOljFlL1",
+  "tags": []
+}

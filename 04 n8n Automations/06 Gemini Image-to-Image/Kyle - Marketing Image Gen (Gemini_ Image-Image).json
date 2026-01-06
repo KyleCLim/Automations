@@ -1,0 +1,810 @@
+{
+  "name": "Kyle - Marketing Image Gen (Gemini: Image-Image)",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "allowFileUploads": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        128,
+        1264
+      ],
+      "id": "bd6ecb14-e4b6-4a54-bbbe-419ae1f79729",
+      "name": "When chat message received",
+      "webhookId": "494d56c3-55c5-4497-b0d8-2bdb38a93fed",
+      "alwaysOutputData": false,
+      "notesInFlow": false,
+      "retryOnFail": false,
+      "executeOnce": false,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://storage.googleapis.com/upload/storage/v1/b/vea-dev-data/o?uploadType=media&name=tenants/1/ai/image-generation/{{ Date.now() }}_{{ $json.files[1].fileName }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "={{ $json.files[1].mimeType }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        432,
+        1520
+      ],
+      "id": "eb566433-c076-4896-b735-7e9c334f99e8",
+      "name": "Image1 to Cloud Storage",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://storage.googleapis.com/upload/storage/v1/b/vea-dev-data/o?uploadType=media&name=tenants/1/ai/image-generation/{{ Date.now() }}_{{ $json.files[0].fileName }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "={{ $json.files[0].mimeType }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        432,
+        1360
+      ],
+      "id": "851d8a86-988e-42f9-b834-e7f4e250a988",
+      "name": "Image0 to Cloud Storage",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://storage.googleapis.com/upload/storage/v1/b/vea-dev-data/o?uploadType=media&name=tenants/1/ai/image-generation/{{ Date.now() }}_{{ $json.files[2].fileName }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "={{ $json.files[2].mimeType }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        432,
+        1680
+      ],
+      "id": "beb3e0de-fd81-4558-8ef1-0aabcc6c28c1",
+      "name": "Image2 to Cloud Storage",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get the input from the trigger\nconst binaryData = $input.item.binary;\nconst chatInput = $input.item.json.chatInput;\n\n// Start the 'parts' array with the text prompt\nconst parts = [\n  { text: chatInput }\n];\n\n// Loop through every binary file and add it to the 'parts' array\nfor (const key of Object.keys(binaryData)) {\n  parts.push({\n    inline_data: {\n      mime_type: binaryData[key].mimeType,\n      data: binaryData[key].data \n    }\n  });\n}\n\n// Return the final payload as one clean object\nreturn {\n  geminiPayload: {\n    contents: [{ parts }],\n    generationConfig: {\n      responseModalities: [\"TEXT\", \"IMAGE\"]\n    }\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        1152
+      ],
+      "id": "14cdc56c-5ec0-4b92-9a76-c5d50e83c6f1",
+      "name": "Code in JavaScript1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googlePalmApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"{{ $json.geminiPayload.contents[0].parts[0].text }}\"\n        },\n        {\n          \"inline_data\": {\n            \"mime_type\": \"image/png\",\n            \"data\": \"{{ $json.geminiPayload.contents[0].parts[1].inline_data.data }}\"\n          }\n        },\n        {\n          \"inline_data\": {\n            \"mime_type\": \"image/png\",\n            \"data\": \"{{ $json.geminiPayload.contents[0].parts[2].inline_data.data }}\"\n          }\n        },\n        {\n          \"inline_data\": {\n            \"mime_type\": \"image/png\",\n            \"data\": \"{{ $json.geminiPayload.contents[0].parts[3].inline_data.data }}\"\n          }\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\n    \"responseModalities\": [\n      \"TEXT\",\n      \"IMAGE\"\n    ]\n  }\n}",
+        "options": {}
+      },
+      "id": "c51fb8e6-ba70-4481-bc22-d9eb2481579b",
+      "name": "Gemini Image Compose1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        880,
+        1248
+      ],
+      "typeVersion": 4.2,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "021aad70-de11-4387-844e-7e7dfd3b1044",
+              "name": "image",
+              "type": "string",
+              "value": "={{ $json.candidates[0].content.parts.find(part => part.inlineData).inlineData.data }}"
+            },
+            {
+              "id": "62877ef7-2057-4d35-a44b-1d58fa1f1769",
+              "name": "=mimeType",
+              "type": "string",
+              "value": "={{ $json.candidates[0].content.parts.find(part => part.inlineData).inlineData.mimeType }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d15ae06a-364d-451e-b4ab-c2aea072f0da",
+      "name": "Get Image Contents1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1088,
+        1248
+      ],
+      "typeVersion": 3.4,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "image",
+        "options": {
+          "mimeType": "={{ $json.mimeType }}"
+        }
+      },
+      "id": "55581f19-c5f9-409f-97b5-1ef85e7fe7f8",
+      "name": "Convert to File1",
+      "type": "n8n-nodes-base.convertToFile",
+      "position": [
+        1296,
+        1248
+      ],
+      "typeVersion": 1.1,
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://storage.googleapis.com/upload/storage/v1/b/vea-dev-data/o?uploadType=media&name=tenants/1/ai/image-generation/{{ Date.now() }}_uploaded_imageToImageFile",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "=image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1488,
+        1248
+      ],
+      "id": "e0536d8a-ef04-49a0-a4db-4a222eef5d32",
+      "name": "HTTP Request1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\n\n// Get these from your Service Account JSON key file\nconst serviceAccountEmail = 'vean8n@unique-aloe-475216-r8.iam.gserviceaccount.com';\n\n// Paste your private key from the JSON file (the whole thing including BEGIN/END)\nconst privateKey = `-----BEGIN PRIVATE KEY-----\\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCjG56vDFHk1RyB\\nCLRJ1f9dS6KcHpphw2okHqKoxBAqcs2LorRRlafZ4YSyXu8uecXTWl+7iY0GIwHe\\ndJOuMAx9NFuu0/sl2LrHKb00sREO5ZcLi4GaZ2eI1kl9Lz2TIWfu+aLvMPjREyQm\\ndl6T/U2C9PLTx9mzdwkHOKF9lD4jsdSJab7sSuDUcYuxh6FrXCCoHIN29yxk0EgW\\nCdqWQdcDqDqinMJThEvzuy2ArFu0GlY3CkVP99qXJAgg+8dqSdCytb4ENN5Zgsao\\nI3Hdd8wWdu+ekX0pE6r0jLkfKuTgEvy2/HNnqFSoQhDUe/3FtBYWrvrTe3jt0S4e\\nPdFc9KUhAgMBAAECggEADUrp8sAhSHHpwcZQ0xeimRrZ5LlFwaPoWYs5nGFmI995\\nSuD2qxN0O3h6lQLRoUsBSUk7NhBusspVk6iShIab7fQ/aI8UD7CLAEIxjkLD7h/d\\n4G39IPU+ZdN457/a18vIKZykn7OxA3D46D2LVao2D+8gfwvxfQO9c5404wQa0FPD\\neg173GNjmB64V5gpGGPEACfcA8/ffZszjSYST6D6ZhOIC1Bq6OU0IJC7jWRtu2AI\\nQjIwYEKP0xKp7PY/sjyhKnzGLdWLAf3oXj9NiI0a/o9Xs+CHaASht4KzIH8m5pwm\\nUpq5vue+AjaSNW0tXQ5ah2fKuMLPLqpbtq2kueHM8QKBgQDRwMHSmuY9gA1gXhSs\\nZa1N5ToytL0kYMS0PmiwsGC4jv/8wNNgOiJ7zC+uQoMe+SoVNemu9qbv+W1ZDZf8\\nrQxVPsTaWNAyfbl1qFdM8onqQZloQ5kIkPnAupk7WvVidAp039zg6vTJ4AFVhnMu\\nE7gQTb17GdUs+/ZZrzbkabKXhQKBgQDHEgpUbjAO9WB01lMlT3SdwNRoQrw+37ps\\nL763EcU4xGr64bdyPKdocVFNlIipfsvYBjwGPxnKqd1dRnnbTNN8vc5ASomuhF02\\n6tHDPbk6R8m4eWVLG4bHeDGUVSOo+FNCKQkHHwVEzhKaCm7d3yYshloH0rEuA1Lh\\nCa8AJTmT7QKBgFRc2dgSEx6TPU4QKPJ55q1Y0AKK7TQPc64nF8ZQ+mXgphcLmzit\\nySbPpjHJcKFph8KGL5n+fIAyaweRTxsCot46Y8SKShq0tH4dGhfJySyd+8ySu59V\\naA5bPrw/xkg18eq2C0mvVotHfGHgtLzIk5SDH/2+Ex6HrLq/nS1bUchdAoGAMDSg\\nJ73fCWBGEUTtMXXCKYlOZkjyyM7ol9Yf+rjk51A5D7Ok9pbVeyclpwG27kR0HEW2\\nN1UEa90ia7nrPD2oYOadkVf7azVGVUwbq4nA1uoXYQKUktGBm7/xUZgkYIBxuO2y\\n7/SFFBpKyt6H5lZpKhMGripJGXlYkoIDzKc3ACkCgYB5ctWUztQHYN+Zx1KhrdkX\\np7eTdUMck5b+x8XNTSBQE1TYX+jSvTQu8lv3KfwqR2VJrWYgNk6QM+ZfAxtnGnNH\\nu8Swk2NgqjELYFN+QTp8SsH4IHowAp9+e4lXk75FiCpVYuhKEei2HGCGG4I70doi\\n0cocZsID8qH+8zDlZkuduw==\\n-----END PRIVATE KEY-----\\n`;\n\nconst response = $input.first().json;\nconst bucket = response.bucket;\nconst objectName = response.name;\n\n// URL expires in 7 days (604800 seconds)\nconst expirationSeconds = 315360000;\nconst expiration = Math.floor(Date.now() / 1000) + expirationSeconds;\n\n// Create signature\nconst stringToSign = `GET\\n\\n\\n${expiration}\\n/${bucket}/${objectName}`;\nconst sign = crypto.createSign('RSA-SHA256');\nsign.update(stringToSign);\nconst signature = encodeURIComponent(sign.sign(privateKey, 'base64'));\n\nconst signedUrl = `https://storage.googleapis.com/${bucket}/${objectName}?GoogleAccessId=${serviceAccountEmail}&Expires=${expiration}&Signature=${signature}`;\n\nreturn [{ \n  json: { \n    imageUrl: signedUrl,\n    expiresAt: new Date(expiration * 1000).toISOString()\n  } \n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        1248
+      ],
+      "id": "362b2d64-30df-44d1-8502-35511b79909a",
+      "name": "Code in JavaScript2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "userMessage"
+            },
+            {
+              "name": "images",
+              "type": "any"
+            },
+            {
+              "name": "tenantId"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -256,
+        304
+      ],
+      "id": "ca00c7e9-5c48-42aa-a9c9-1ee8d41fc83c",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googlePalmApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.geminiPayload }}",
+        "options": {}
+      },
+      "id": "1caa7203-0df4-4077-923c-4cbda944b59f",
+      "name": "Gemini Image Compose",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        464,
+        160
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "021aad70-de11-4387-844e-7e7dfd3b1044",
+              "name": "image",
+              "type": "string",
+              "value": "={{ $json.candidates[0].content.parts.find(part => part.inlineData).inlineData.data }}"
+            },
+            {
+              "id": "62877ef7-2057-4d35-a44b-1d58fa1f1769",
+              "name": "=mimeType",
+              "type": "string",
+              "value": "={{ $json.candidates[0].content.parts.find(part => part.inlineData).inlineData.mimeType }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f6307756-4acf-427c-a88b-759ee3e0887c",
+      "name": "Get Image Contents",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        816,
+        160
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "image",
+        "options": {
+          "mimeType": "={{ $json.mimeType }}"
+        }
+      },
+      "id": "ca6347de-903a-47b0-bbed-344687f24bf5",
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "position": [
+        1024,
+        160
+      ],
+      "typeVersion": 1.1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\n\n// Get these from your Service Account JSON key file\nconst serviceAccountEmail = 'vean8n@unique-aloe-475216-r8.iam.gserviceaccount.com';\n\n// Paste your private key from the JSON file (the whole thing including BEGIN/END)\nconst privateKey = `-----BEGIN PRIVATE KEY-----\\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCjG56vDFHk1RyB\\nCLRJ1f9dS6KcHpphw2okHqKoxBAqcs2LorRRlafZ4YSyXu8uecXTWl+7iY0GIwHe\\ndJOuMAx9NFuu0/sl2LrHKb00sREO5ZcLi4GaZ2eI1kl9Lz2TIWfu+aLvMPjREyQm\\ndl6T/U2C9PLTx9mzdwkHOKF9lD4jsdSJab7sSuDUcYuxh6FrXCCoHIN29yxk0EgW\\nCdqWQdcDqDqinMJThEvzuy2ArFu0GlY3CkVP99qXJAgg+8dqSdCytb4ENN5Zgsao\\nI3Hdd8wWdu+ekX0pE6r0jLkfKuTgEvy2/HNnqFSoQhDUe/3FtBYWrvrTe3jt0S4e\\nPdFc9KUhAgMBAAECggEADUrp8sAhSHHpwcZQ0xeimRrZ5LlFwaPoWYs5nGFmI995\\nSuD2qxN0O3h6lQLRoUsBSUk7NhBusspVk6iShIab7fQ/aI8UD7CLAEIxjkLD7h/d\\n4G39IPU+ZdN457/a18vIKZykn7OxA3D46D2LVao2D+8gfwvxfQO9c5404wQa0FPD\\neg173GNjmB64V5gpGGPEACfcA8/ffZszjSYST6D6ZhOIC1Bq6OU0IJC7jWRtu2AI\\nQjIwYEKP0xKp7PY/sjyhKnzGLdWLAf3oXj9NiI0a/o9Xs+CHaASht4KzIH8m5pwm\\nUpq5vue+AjaSNW0tXQ5ah2fKuMLPLqpbtq2kueHM8QKBgQDRwMHSmuY9gA1gXhSs\\nZa1N5ToytL0kYMS0PmiwsGC4jv/8wNNgOiJ7zC+uQoMe+SoVNemu9qbv+W1ZDZf8\\nrQxVPsTaWNAyfbl1qFdM8onqQZloQ5kIkPnAupk7WvVidAp039zg6vTJ4AFVhnMu\\nE7gQTb17GdUs+/ZZrzbkabKXhQKBgQDHEgpUbjAO9WB01lMlT3SdwNRoQrw+37ps\\nL763EcU4xGr64bdyPKdocVFNlIipfsvYBjwGPxnKqd1dRnnbTNN8vc5ASomuhF02\\n6tHDPbk6R8m4eWVLG4bHeDGUVSOo+FNCKQkHHwVEzhKaCm7d3yYshloH0rEuA1Lh\\nCa8AJTmT7QKBgFRc2dgSEx6TPU4QKPJ55q1Y0AKK7TQPc64nF8ZQ+mXgphcLmzit\\nySbPpjHJcKFph8KGL5n+fIAyaweRTxsCot46Y8SKShq0tH4dGhfJySyd+8ySu59V\\naA5bPrw/xkg18eq2C0mvVotHfGHgtLzIk5SDH/2+Ex6HrLq/nS1bUchdAoGAMDSg\\nJ73fCWBGEUTtMXXCKYlOZkjyyM7ol9Yf+rjk51A5D7Ok9pbVeyclpwG27kR0HEW2\\nN1UEa90ia7nrPD2oYOadkVf7azVGVUwbq4nA1uoXYQKUktGBm7/xUZgkYIBxuO2y\\n7/SFFBpKyt6H5lZpKhMGripJGXlYkoIDzKc3ACkCgYB5ctWUztQHYN+Zx1KhrdkX\\np7eTdUMck5b+x8XNTSBQE1TYX+jSvTQu8lv3KfwqR2VJrWYgNk6QM+ZfAxtnGnNH\\nu8Swk2NgqjELYFN+QTp8SsH4IHowAp9+e4lXk75FiCpVYuhKEei2HGCGG4I70doi\\n0cocZsID8qH+8zDlZkuduw==\\n-----END PRIVATE KEY-----\\n`;\n\nconst response = $input.first().json;\nconst bucket = response.bucket;\nconst objectName = response.name;\n\n// URL expires in 7 days (604800 seconds)\nconst expirationSeconds = 315360000;\nconst expiration = Math.floor(Date.now() / 1000) + expirationSeconds;\n\n// Create signature\nconst stringToSign = `GET\\n\\n\\n${expiration}\\n/${bucket}/${objectName}`;\nconst sign = crypto.createSign('RSA-SHA256');\nsign.update(stringToSign);\nconst signature = encodeURIComponent(sign.sign(privateKey, 'base64'));\n\nconst signedUrl = `https://storage.googleapis.com/${bucket}/${objectName}?GoogleAccessId=${serviceAccountEmail}&Expires=${expiration}&Signature=${signature}`;\n\nreturn [{ \n  json: { \n    imageUrl: signedUrl,\n    expiresAt: new Date(expiration * 1000).toISOString()\n  } \n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1696,
+        160
+      ],
+      "id": "f52d317e-34a1-487b-979c-2fa50524bfc6",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "images",
+        "options": {}
+      },
+      "id": "4812e6c0-38e9-461a-883b-cacedccd15d3",
+      "name": "Split Out Images",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        112,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// 1. Get the data from the current item\nconst base64String = $input.item.json.base64;\nconst originalFileName = $input.item.json.fileName;\nconst mimeType = $input.item.json.mimeType;\n\n// 2. Generate the Timestamp (YYYY-MM-DD_HH:mm:ss)\nconst now = new Date();\nconst datePart = now.toISOString().split('T')[0]; // YYYY-MM-DD\nconst timePart = now.toTimeString().split(' ')[0]; // HH:mm:ss\nconst newFileName = `${datePart}_${timePart}_${originalFileName}_imageToImage`;\n\n// 3. Convert the Base64 string to a Node.js Buffer\nconst buffer = Buffer.from(base64String, 'base64');\n\n// 4. Use the correct helper to prepare the binary data for n8n\nconst binaryData = await helpers.prepareBinaryData(buffer, newFileName, mimeType);\n\n// Return the item: keep original JSON (minus the huge base64 string) and add the binary\nreturn {\n  json: {\n    ...$input.item.json,\n    base64: undefined // Removes the string to save memory\n  },\n  binary: {\n    data: binaryData // 'data' is the standard name used by n8n nodes\n  }\n};"
+      },
+      "id": "06025433-10d3-46db-87af-9da5238e360e",
+      "name": "Convert Base64 to Binary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://storage.googleapis.com/upload/storage/v1/b/folder_name/o?uploadType=media&name=tenants/your_own_folder_name/ai/image-generation/{{ $json.fileName }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "={{ $json.mimeType }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        816,
+        400
+      ],
+      "id": "21e8dd16-57be-4ab3-9688-f6bae7f30c58",
+      "name": "Image to Cloud Storage"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.item.json;\n\n// 1. Start building the 'parts' array with the text prompt\nconst parts = [\n  { text: input.userMessage }\n];\n\n// 2. Map through the images array and add each one to the parts\nif (input.images && Array.isArray(input.images)) {\n  input.images.forEach(img => {\n    parts.push({\n      inline_data: {\n        mime_type: img.mimeType || \"image/png\",\n        data: img.base64\n      }\n    });\n  });\n}\n\n// 3. Construct the final object\nreturn {\n  json: {\n    // Pass the original data along just in case\n    ...input, \n    // This is the clean payload for the HTTP node\n    geminiPayload: {\n      contents: [{ parts }],\n      generationConfig: {\n        responseModalities: [\"TEXT\", \"IMAGE\"]\n      }\n    }\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        112,
+        160
+      ],
+      "id": "78a8b5a9-3606-4e2b-aa1f-ca045c0e346c",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "content": "## For Demo Purposes Only",
+        "height": 880,
+        "width": 1840
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        64,
+        1024
+      ],
+      "typeVersion": 1,
+      "id": "74d5c76a-4ff8-4407-82a6-fd9a8f1c2ca6",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## This workflow will only accept the JSON structure below: \n[\n{\n\"tenantId\": \"1\",\n\"userMessage\": \"The user message\",\n\"images\": [{\"fileName\": \"image_0\", \"mimeType\": \"image/png\", \"base64\": \"the image's base64 string\"}, {\"fileName\": \"image_1\", \"mimeType\": \"image/png\", \"base64\": \"the image's base64 string\"}, {\"fileName\": \"image_2\", \"mimeType\": \"image/png\", \"base64\": \"the image's base64 string\"}]\n}\n]\n\n### Note:\n- Images must be converted to base64 string before sending to this workflow.",
+        "height": 400,
+        "width": 336,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -640,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "15c83a95-db34-421a-b1f6-faa6964bdc92",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n##  Separate Each Attached Image (Dynamic)\n- This step is crucial to dynamically process each attached image\n- This will spit out the attached images one-by-one for processing",
+        "height": 384,
+        "width": 320,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "9ad9e1b2-ef00-4490-9b0f-74b6a84bb171",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Convert Base64 String to Binary  Data\n- Included in the Code is the naming convention of the file to be saved in the Google Cloud Storage",
+        "height": 384,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        352,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "81e28307-2d30-41b6-b04f-502184ca511a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Store Images via Google Cloud Storage ",
+        "height": 384,
+        "width": 352,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "7af7140b-ba4e-405e-af8d-53a6a99f5ffb",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Prepare Gemini Payload \n- This code will format the data from the webhook to include all the attached images dynamically",
+        "height": 368,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "e1462f09-7bca-4766-bed9-603b097ec339",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Requested Image via Google Gemini \n- Currently using gemini-flash-2.5-image model\n- For more image generation AI model, visit https://ai.google.dev/gemini-api/docs/nanobanana",
+        "height": 368,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        352,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "5f806aeb-9e5a-43e0-8b00-1916e7520ef5",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Set Variables for Easy Tracking and  Converting Base64 String to Binary Data \n",
+        "height": 368,
+        "width": 528,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "a0ea753c-5da5-4c92-844c-2ec57d6340e9",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Store Image via Google Cloud Storage ",
+        "height": 368,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1264,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "163bb80c-ff50-4dbd-91ac-e3d1680e2e3e",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## Format Desired Output via Code\n- Format your output here. This will depend on how you want your result to be received in the workflow calling this one",
+        "height": 368,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1600,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "ba3597c3-ac12-47d6-a9fa-89f2b578982d",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## Note:\n\n### - Workflow still not linked to main agent. Still awaiting for Binary-to-Base64 conversion function from the main agent to send data in this sub-workflow\n\n### - Still awaiting for backend & frontend to include image attachment in the VEA AI chat interface\n",
+        "height": 208,
+        "width": 736,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1088,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "f9fc750e-b791-4a68-b491-d890e0a0ae87",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://storage.googleapis.com/upload/storage/v1/b/folder_name/o?uploadType=media&name=tenants/your_own_folder_name/ai/image-generation/{{ Date.now() }}_uploaded_imageToImageFile",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "=image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1360,
+        160
+      ],
+      "id": "6ef2a0c8-8d0a-4a52-b1d1-beda31d69138",
+      "name": "Requested Image to Cloud"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image0 to Cloud Storage",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image1 to Cloud Storage",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image2 to Cloud Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Gemini Image Compose1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Image Compose1": {
+      "main": [
+        [
+          {
+            "node": "Get Image Contents1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image Contents1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Split Out Images",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Image Compose": {
+      "main": [
+        [
+          {
+            "node": "Get Image Contents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image Contents": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Requested Image to Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Images": {
+      "main": [
+        [
+          {
+            "node": "Convert Base64 to Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Base64 to Binary": {
+      "main": [
+        [
+          {
+            "node": "Image to Cloud Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "Gemini Image Compose",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Requested Image to Cloud": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "685262c6-e406-4b90-a209-21da2f8c1111",
+  "meta": {
+    "instanceId": "61c77e6c56f98333453e4a094a95b4b00ad456e86702e7e79068f02608ef70e8"
+  },
+  "id": "y4zdi75BhWvVQ3GQ",
+  "tags": []
+}

@@ -1,0 +1,468 @@
+{
+  "name": "Kyle - Marketing Image Gen (Gemini: Text-Image)",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "conversationID"
+            },
+            {
+              "name": "sessionID"
+            },
+            {
+              "name": "marketingdirectorMessage"
+            },
+            {
+              "name": "title"
+            },
+            {
+              "name": "toolSelected"
+            },
+            {
+              "name": "tenantId"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1168,
+        224
+      ],
+      "id": "11458f0f-20b3-4064-83fb-4e7d8af3e1f9",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -912,
+        448
+      ],
+      "id": "5249186b-848f-47ff-b5aa-5a285333e911",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"improvedPrompt\": \"The improved prompt from the AI agent for the marketing video\",\n    \"userID\": \"564\",\n    \"conversationID\": \"209\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        448
+      ],
+      "id": "cea82d3a-5a07-4be3-a319-0cdb9285338c",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=User ID: {{ $json.sessionID }}\nConversation ID: {{ $json.conversationID }}\nUser Message: {{ $json.marketingdirectorMessage }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are the \"AI Marketing Image Prompt Optimizer\", a specialized agent focused on converting rough user ideas into perfect, compelling, high-conversion image generation prompts suitable for advertising and marketing campaigns. Your output will be used directly to create a single, impactful marketing image.\n\nYour primary expertise lies in visual marketing, brand alignment, composition, and persuasive imagery.\n\n## Core Directives & Goal\n1. Marketing Focus: Immediately discern the user's marketing objective (e.g., trust-building, product desire, lifestyle association) and optimize the prompt to achieve this goal visually.\n\n2. Aesthetic Enhancement: Add detailed specifications for lighting, texture, style (e.g., photo-realistic, cinematic, vector art), and overall mood.\n\n3. Use Tool Knowledge: You must utilize the knowledge base tool named \"Camera Shots\" to determine and specify the most effective composition and framing for the final image.\n\n4. Final Output: Your response must be the final, optimized text prompt only, ready for image generation. Do not include any preceding or concluding commentary.\n\n\n## Mandatory Inclusions (Use Tool Knowledge)\n- Camera Shot Specification: You must choose and explicitly state the best camera shot from the \"Camera Shots\" knowledge base to maximize the image's marketing message. (e.g., Extreme Close-Up for detail, Full Shot for scale, Medium Shot for context).\n\n- Quality and Impact Keywords: Embed professional photography and marketing keywords to elevate the technical and persuasive quality of the image (e.g., golden hour lighting, deep depth of field, viral ad campaign aesthetic, 8K photo-realism).\n\n\n## Output Format & Constraints\nGenerate a single, detailed paragraph that functions as the final, optimized image prompt. Ensure the prompt is comprehensive and ready for generation.\n\n\n## Example Prompt Structure (for your reference, not the agent's output):\n\n\"A stunning, high-definition photograph of a [Product Name/Subject] in a [Specific Setting]. The mood is [Mood, e.g., optimistic and inspiring] with clean, dynamic studio lighting and a vibrant color palette. Use a [Specific Camera Shot, e.g., Close-Up Shot] to dramatically highlight the texture and craftsmanship of the product, creating an immediate sense of quality and desire. The composition should follow the rule of thirds for maximum visual impact, capturing a viral ad campaign aesthetic with 8K photo-realism.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -912,
+        224
+      ],
+      "id": "f02e71c2-a5d2-493c-919d-c4f03d6b5b36",
+      "name": "Marketing Image Prompt Optimizer"
+    },
+    {
+      "parameters": {
+        "url": "https://narrasoft.com/types-camera-shots-angles/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [
+        -576,
+        448
+      ],
+      "id": "41ddfc49-1159-402d-8ac0-b4cf0d3a52b0",
+      "name": "Camera Shots"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/imagen-4.0-ultra-generate-001",
+          "mode": "list",
+          "cachedResultName": "models/imagen-4.0-ultra-generate-001"
+        },
+        "prompt": "={{ $json.prompt }}",
+        "options": {}
+      },
+      "id": "c241dddb-53a5-480d-a727-b7c9bd7e1a27",
+      "name": "Generate Image",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.imgbb.com/1/upload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "expiration",
+              "value": "600"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -64,
+        560
+      ],
+      "id": "d070304d-2cd7-43af-b4e4-aacc1568696d",
+      "name": "Upload Image to ImgBB1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const url = $input.first().json.data.url;\n\nreturn [{ json: { videoUrl: url } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        560
+      ],
+      "id": "89e4a104-45fd-4bef-be15-621e59284bf6",
+      "name": "Code in JavaScript1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\n\n// Get these from your Service Account JSON key file\nconst serviceAccountEmail = 'your_service_account_email_here.iam.gserviceaccount.com';\n\n// Paste your private key from the JSON file (the whole thing including BEGIN/END)\nconst privateKey = `Your_privateKey_here`;\n\nconst response = $input.first().json;\nconst bucket = response.bucket;\nconst objectName = response.name;\n\n// URL expires in 7 days (604800 seconds)\nconst expirationSeconds = 315360000;\nconst expiration = Math.floor(Date.now() / 1000) + expirationSeconds;\n\n// Create signature\nconst stringToSign = `GET\\n\\n\\n${expiration}\\n/${bucket}/${objectName}`;\nconst sign = crypto.createSign('RSA-SHA256');\nsign.update(stringToSign);\nconst signature = encodeURIComponent(sign.sign(privateKey, 'base64'));\n\nconst signedUrl = `https://storage.googleapis.com/${bucket}/${objectName}?GoogleAccessId=${serviceAccountEmail}&Expires=${expiration}&Signature=${signature}`;\n\nreturn [{ \n  json: { \n    imageUrl: signedUrl,\n    expiresAt: new Date(expiration * 1000).toISOString()\n  } \n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        224
+      ],
+      "id": "ea550d63-23fc-4a9c-9a2b-7d8b713a8db5",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://storage.googleapis.com/upload/storage/v1/b/storage_bucket_here/o?uploadType=media&name=tenants/1/ai/image-generation/{{ Date.now() }}_{{ $json.fileName }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "={{ $json.mimeType }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        16,
+        224
+      ],
+      "id": "b38d3724-4627-44c7-9c0d-7456a4954f30",
+      "name": "Store Image to Google Bucket Storage"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "61276497-3ceb-47b5-b938-4203123e32e6",
+              "name": "=prompt",
+              "value": "={{ $json.output.improvedPrompt }}",
+              "type": "string"
+            },
+            {
+              "id": "1ec431f0-9ba4-4eaa-b899-4a1151fe9909",
+              "name": "userID",
+              "value": "={{ $json.output.userID }}",
+              "type": "number"
+            },
+            {
+              "id": "9edc42fb-0ccc-4424-b47e-cdb1751a46e0",
+              "name": "conversationID",
+              "value": "={{ $json.output.conversationID }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "9adf6d56-1e70-4e5c-bede-1123472dcf48",
+      "name": "Setup Variables",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -464,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Generate Image & Store Image via Google Gemini and Google Cloud Storage \n- First, setup your account in  Google Console. Enable and activate related API services like Gemini, Cloud, Generative Language, etc.",
+        "height": 400,
+        "width": 416
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "ae8f9693-974c-49ea-9666-8ac5fe45be77",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Setup Variables\n- You can setup your variables here for easier tracking",
+        "height": 400,
+        "width": 288,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -560,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "2b7a8d97-2c8c-4e7d-bf58-7b97839f10eb",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Format Desired Output via Code\n- Format your output here. This will depend on how you want your result to received in the workflow calling this one.",
+        "height": 400,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        208,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "9c5930fe-2af2-4bcc-958a-1aff29e3a085",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Knowledgebase for Camerashots & Angles and Format Desired Result from the AI",
+        "height": 352,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -672,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "634fcc50-7ea0-423d-a78e-a067a1e93c9a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Marketing Image Prompt Optimizer\n- This AI agent will edit the user prompt and optimize it with the proper camera shots and angles depending on how it analyze the user's request.",
+        "height": 400,
+        "width": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -960,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "34d963bf-09b0-4b77-a8e2-ce8339de420c",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Spare System for Image Upload and Output Formatting\n- In case Google Storage is unavailable, you can use a temporary free image hosting service. You can upload binary data and retrieve it as an URL image. Create an account in \"https://imgbb.com/\".",
+        "height": 352,
+        "width": 768,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "e12d70c4-2566-42ff-8e3e-ad1a4b7c3e71",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "conversationID": "209",
+          "sessionID": "564",
+          "marketingdirectorMessage": "Create a marketing image for a red ferrari sports car."
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Marketing Image Prompt Optimizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Marketing Image Prompt Optimizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Marketing Image Prompt Optimizer",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Image Prompt Optimizer": {
+      "main": [
+        [
+          {
+            "node": "Setup Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Camera Shots": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Image Prompt Optimizer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Store Image to Google Bucket Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Image to ImgBB1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Image to Google Bucket Storage": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setup Variables": {
+      "main": [
+        [
+          {
+            "node": "Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c2d95485-3464-4dd8-bf5f-2c3ae1106dbb",
+  "meta": {
+    "instanceId": "61c77e6c56f98333453e4a094a95b4b00ad456e86702e7e79068f02608ef70e8"
+  },
+  "id": "45PQuwhlmB1pCyc5",
+  "tags": []
+}

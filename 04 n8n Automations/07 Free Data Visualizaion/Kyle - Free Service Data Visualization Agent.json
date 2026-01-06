@@ -1,0 +1,182 @@
+{
+  "name": "Kyle - Data Visualization Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        656,
+        -128
+      ],
+      "id": "7cc28fa3-3f86-4772-b8de-9af3d9b37154",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Input data: {{ $json.properties.query }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=### ROLE\nYou are an expert in data visualization and Chart.js. Your task is to generate **valid** Chart.js configuration JSON objects based on user requests. These configurations should be directly usable within a Chart.js environment.\n\n## INPUT\nYou will process user requests describing desired visualizations. The requests may include:\n\nChart Type: Examples include bar, line, pie, scatter, radar, bubble, doughnut, etc.\nData: The dataset to be visualized. This could be provided in various formats such as CSV, JSON, or lists. Extract data where necessary and clarify if formats are ambiguous.\nLabels: Axis titles, data point labels, or legends. Prompt the user for clarification if axis titles or units are missing.\nStyle Options: Customization request for: Colors, fonts, gridlines, and legends\n\nTooltips, animations, and plugins\nDefaults should be applied if no styling is provided.\nChart.js-Specific Features: Request for options such as:\nLogarithmic scales\nCustom tooltips\nResponsive design\nNatural Language Descriptions: Handle loosely structured user inputs and transform them into valid Chart.js configurations.\n\nAxis Information\nEnsure clarity and completeness of axis-related details:\nAxis Titles: Example: \"Month\" for the x-axis, \"Sales (USD)\" for the y-axis.\nUnits: If applicable, specify units like \"USD\", \"kg\", or \"cm\".\nData Type: Indicate whether the axis data is categorical, numerical, or time-series.\nFormatting: Include date formats, number formats, or currency symbols where relevant.\n\n### OUTPUT FORMAT\nYou must always return a **valid JSON object** that exactly follows this schema:\n- Do not include any text before or after the JSON output.\n- If data is missing or ambiguous, use default values.\n- Ensure all necessary fields are present.\n\n### Example Input:\nUser: \"Create a bar chart for Q1 sales where Jan had $10,000, Feb had $12,000, and Mar had $15,000.\"\n\n### Correct JSON Output:\n{\n  \"type\": \"bar\",\n  \"data\": {\n    \"labels\": [\"January\", \"February\", \"March\"],\n    \"datasets\": [\n      {\n        \"label\": \"Sales (USD)\",\n        \"data\": [10000, 12000, 15000],\n        \"backgroundColor\": \"blue\"\n      }\n    ]\n  },\n  \"options\": {\n    \"responsive\": true,\n    \"plugins\": {\n      \"title\": {\n        \"display\": true,\n        \"text\": \"Q1 2024 Sales\"\n      }\n    },\n    \"scales\": {\n      \"x\": {\n        \"title\": {\n          \"display\": true,\n          \"text\": \"Month\"\n        }\n      },\n      \"y\": {\n        \"title\": {\n          \"display\": true,\n          \"text\": \"Sales (USD)\"\n        }\n      }\n    }\n  }\n}\n\n## IMPORTANT CONSIDERATIONS\nData Validation: Validate all inputs. If data is missing or inconsistent, ask the user for clarification.\nError Handling: If the request cannot be fulfilled, response gracefully with an explanation.\nChart.js Version: Default to the latest stable Chart.js version unless specified otherwise.\nBest Practices: Prioritize clear and informative axis labels. Ensure all charts are readable and visually engaging.",
+          "returnIntermediateSteps": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        880,
+        -128
+      ],
+      "id": "964746b3-d11d-4b43-9d4c-7ff41413fe22",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        112
+      ],
+      "id": "2dd0d850-46b4-4a4e-927a-2401fcf946da",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "={\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"type\": {\n      \"type\": \"string\",\n      \"enum\": [\"bar\", \"line\", \"pie\", \"doughnut\", \"radar\", \"polarArea\", \"bubble\", \"scatter\"],\n      \"description\": \"The type of chart to generate.\"\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"labels\": {\n          \"type\": \"array\",\n          \"items\": { \"type\": \"string\" },\n          \"description\": \"Labels for the chart's x-axis (or categories for pie charts).\"\n        },\n        \"datasets\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"label\": {\n                \"type\": \"string\",\n                \"description\": \"Label for the dataset.\"\n              },\n              \"data\": {\n                \"type\": \"array\",\n                \"items\": { \"type\": \"number\" },\n                \"description\": \"Array of numerical values corresponding to labels.\"\n              },\n              \"backgroundColor\": {\n  \"oneOf\": [\n    { \"type\": \"string\" },\n    { \"type\": \"array\", \"items\": { \"type\": \"string\" } }\n  ]\n},\n\"borderColor\": {\n  \"oneOf\": [\n    { \"type\": \"string\" },\n    { \"type\": \"array\", \"items\": { \"type\": \"string\" } }\n  ]\n  },\n              \"borderWidth\": {\n                \"type\": \"number\",\n                \"description\": \"Width of dataset borders.\"\n              }\n            },\n            \"required\": [\"label\", \"data\"]\n          },\n          \"description\": \"Array of datasets (one or more data series).\"\n        }\n      },\n      \"required\": [\"labels\", \"datasets\"]\n    },\n    \"options\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"responsive\": {\n          \"type\": \"boolean\",\n          \"description\": \"Whether the chart is responsive.\"\n        },\n        \"plugins\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"title\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"display\": { \"type\": \"boolean\" },\n                \"text\": { \"type\": \"string\" }\n              }\n            }\n          }\n        },\n        \"scales\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"x\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"title\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"display\": { \"type\": \"boolean\" },\n                    \"text\": { \"type\": \"string\" }\n                  }\n                }\n              }\n            },\n            \"y\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"title\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"display\": { \"type\": \"boolean\" },\n                    \"text\": { \"type\": \"string\" }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  },\n  \"required\": [\"type\", \"data\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1056,
+        112
+      ],
+      "id": "c014fd12-b966-4967-9489-029640170b35",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "797bc5cc-5059-4572-817f-2efa39b9cf9d",
+              "name": "response",
+              "value": "={{ \"https://quickchart.io/chart?width=400&c=\" + encodeURIComponent(JSON.stringify($json.output)) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1248,
+        -128
+      ],
+      "id": "63afb143-e46e-4034-b21c-0a56f3b08e7c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "## Data Visualization Agent (Sub agent) \n- generate free charts using chart.js format\n- the chart.js format is then sent to quickchart for visualization",
+        "height": 520,
+        "width": 960
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        528,
+        -272
+      ],
+      "id": "3f0cd7ca-7768-4fe3-a486-66c03b4462ea",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "type": "object",
+          "properties": {
+            "query": "Create a bar chart for Q1 sales where Jan had $10,000, Feb had $12,000, and Mar had $15,000."
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d4f8bc15-145f-4d37-8259-ddc2d283fff8",
+  "meta": {
+    "instanceId": "61c77e6c56f98333453e4a094a95b4b00ad456e86702e7e79068f02608ef70e8"
+  },
+  "id": "qKI1pvWfDF3LLoRv",
+  "tags": []
+}
